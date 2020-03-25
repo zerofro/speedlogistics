@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加图书</title>
+
+    <!-- Bootstrap -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="css/content.css" rel="stylesheet">
+    <script src="js/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<!--路径导航-->
+<ol class="breadcrumb breadcrumb_nav">
+    <li>首页</li>
+    <li>图书管理</li>
+    <li class="active">添加图书</li>
+</ol>
+<!--路径导航-->
+
+<div class="page-content">
+    <div class="panel panel-default">
+        <div class="panel-heading">添加图书信息</div>
+        <div class="panel-body">
+            <form th:action="@{/tCustomer/modify}" method="post">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>书名</label>
+                                <input type="text" class="form-control" id="bookName" name="bookName" placeholder="书名">
+                            </div>
+                            <div class="form-group">
+                                <label for="bookNote">简介</label>
+                                <textarea class="form-control" rows="10" cols="10" id="bookNote"
+                                          name="bookNote"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="bookAuthor">作者</label>
+                                <input type="text" class="form-control" id="bookAuthor" name="bookAuthor"
+                                       placeholder="佚名">
+                            </div>
+                            <div class="form-group">
+                                <label for="bookMoney">价格</label>
+                                <input type="text" class="form-control" id="bookMoney" name="bookMoney" placeholder="￥">
+                            </div>
+                            <div class="form-group">
+                                <label for="bookDate">出版日期</label>
+                                <input type="date" class="form-control" id="bookDate" name="bookDate">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">添 加</button>&emsp;&emsp;
+                                <button type="reset" class="btn btn-primary">重 填</button>
+                            </div>
+                            <span style="color: red" th:text="${error}" th:if="${error!=null}"></span>
+                        </div>
+                    </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

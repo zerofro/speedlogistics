@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.logistics.dao.TResSortDao">
+
+    <resultMap type="com.zero.logistics.entity.TResSort" id="TResSortMap">
+        <result property="resSortId" column="res_sort_id" jdbcType="INTEGER"/>
+        <result property="resSort" column="res_sort" jdbcType="VARCHAR"/>
+        <result property="resSortMoney" column="res_sort_money" jdbcType="NUMERIC"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TResSortMap">
+        select
+          res_sort_id, res_sort, res_sort_money
+        from speedlogisticsdb.t_res_sort
+        where res_sort_id = #{resSortId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TResSortMap">
+        select
+          res_sort_id, res_sort, res_sort_money
+        from speedlogisticsdb.t_res_sort
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TResSortMap">
+        select
+          res_sort_id, res_sort, res_sort_money
+        from speedlogisticsdb.t_res_sort
+        <where>
+            <if test="resSortId != null">
+                and res_sort_id = #{resSortId}
+            </if>
+            <if test="resSort != null and resSort != ''">
+                and res_sort = #{resSort}
+            </if>
+            <if test="resSortMoney != null">
+                and res_sort_money = #{resSortMoney}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="resSortId" useGeneratedKeys="true">
+        insert into speedlogisticsdb.t_res_sort(res_sort, res_sort_money)
+        values (#{resSort}, #{resSortMoney})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update speedlogisticsdb.t_res_sort
+        <set>
+            <if test="resSort != null and resSort != ''">
+                res_sort = #{resSort},
+            </if>
+            <if test="resSortMoney != null">
+                res_sort_money = #{resSortMoney},
+            </if>
+        </set>
+        where res_sort_id = #{resSortId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from speedlogisticsdb.t_res_sort where res_sort_id = #{resSortId}
+    </delete>
+
+</mapper>

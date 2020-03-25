@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.logistics.dao.TCustomerDao">
+
+    <resultMap type="com.zero.logistics.entity.TCustomer" id="TCustomerMap">
+        <result property="customerId" column="customer_id" jdbcType="INTEGER"/>
+        <result property="wxId" column="wx_id" jdbcType="VARCHAR"/>
+        <result property="wxName" column="wx_name" jdbcType="VARCHAR"/>
+        <result property="customerPhone" column="customer_phone" jdbcType="VARCHAR"/>
+        <result property="realNum" column="real_num" jdbcType="VARCHAR"/>
+        <result property="realName" column="real_name" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TCustomerMap">
+        select
+          customer_id, wx_id, wx_name, customer_phone, real_num, real_name, state
+        from speedlogisticsdb.t_customer
+        where customer_id = #{customerId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TCustomerMap">
+        select
+          customer_id, wx_id, wx_name, customer_phone, real_num, real_name, state
+        from speedlogisticsdb.t_customer
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TCustomerMap">
+        select
+          customer_id, wx_id, wx_name, customer_phone, real_num, real_name, state
+        from speedlogisticsdb.t_customer
+        <where>
+            <if test="customerId != null">
+                and customer_id = #{customerId}
+            </if>
+            <if test="wxId != null and wxId != ''">
+                and wx_id = #{wxId}
+            </if>
+            <if test="wxName != null and wxName != ''">
+                and wx_name = #{wxName}
+            </if>
+            <if test="customerPhone != null and customerPhone != ''">
+                and customer_phone = #{customerPhone}
+            </if>
+            <if test="realNum != null and realNum != ''">
+                and real_num = #{realNum}
+            </if>
+            <if test="realName != null and realName != ''">
+                and real_name = #{realName}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="customerId" useGeneratedKeys="true">
+        insert into speedlogisticsdb.t_customer(wx_id, wx_name, customer_phone, real_num, real_name, state)
+        values (#{wxId}, #{wxName}, #{customerPhone}, #{realNum}, #{realName}, #{state})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update speedlogisticsdb.t_customer
+        <set>
+            <if test="wxId != null and wxId != ''">
+                wx_id = #{wxId},
+            </if>
+            <if test="wxName != null and wxName != ''">
+                wx_name = #{wxName},
+            </if>
+            <if test="customerPhone != null and customerPhone != ''">
+                customer_phone = #{customerPhone},
+            </if>
+            <if test="realNum != null and realNum != ''">
+                real_num = #{realNum},
+            </if>
+            <if test="realName != null and realName != ''">
+                real_name = #{realName},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+        </set>
+        where customer_id = #{customerId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from speedlogisticsdb.t_customer where customer_id = #{customerId}
+    </delete>
+
+    <!--通过微信id获取用户信息-->
+    <select id="queryByWxId" parameterType="string" resultMap="TCustomerMap">
+        SELECT * FROM `t_customer`
+        WHERE `wx_id` = #{wxId}
+    </select>
+
+    <!--设置客户名-->
+    <update id="setWxName">
+        update speedlogisticsdb.t_customer
+        set wx_name = #{wxName}
+        where customer_id = #{customerId}
+    </update>
+
+    <!--获取总记录数-->
+    <select id="getCount" parameterType="string" resultType="int">
+        SELECT COUNT(1) FROM `t_customer`
+        <if test="condition != null and condition != ''">
+            WHERE `wx_name` LIKE CONCAT(#{condition},'%')
+            OR `real_name` LIKE CONCAT(#{condition},'%')
+        </if>
+    </select>
+
+    <!--根据条件查询页内容-->
+    <select id="pageByCondition" resultMap="TCustomerMap">
+        SELECT * FROM `t_customer`
+        <if test="condition != null and condition != ''">
+            WHERE `wx_name` LIKE CONCAT(#{condition},'%')
+            OR `real_name` LIKE CONCAT(#{condition},'%')
+        </if>
+        LIMIT #{startRow}, #{pageSize}
+    </select>
+</mapper>

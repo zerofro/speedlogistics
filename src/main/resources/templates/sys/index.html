@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>物流平台管理系统</title>
+    <!-- Bootstrap -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="js/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/hardphp.js"></script>
+</head>
+<body>
+<!--导航栏-->
+<div class="myheading">
+    <nav class="navbar navbar-inner">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <!--nav troggle-->
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#hard-navbar">
+                    <span class="sr-only">导航切换</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!--nav troggle-->
+                <!--brand-->
+                <a class="navbar-brand" href="#">物流平台管理系统</a>
+                <!--brand-->
+            </div>
+
+            <!--nav links-->
+            <div class="collapse navbar-collapse" id="hard-navbar">
+
+                <ul class="nav navbar-nav navbar-right">
+<!--                    <li><span class="userName" th:text="${session.user.userName}"></span></li>-->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> 个人信息
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-arrow-right" role="menu">
+                            <li><a href="#"><span class="glyphicon glyphicon-edit"></span> 修改密码</a></li>
+                            <li><a th:href="@{/logout}"><span
+                                    class="glyphicon glyphicon-log-out"></span> 退出登录</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!--nav links-->
+        </div>
+    </nav>
+</div>
+
+<!--main-->
+<div class="container-fluid mybody">
+    <div class="main-wapper">
+        <!--菜单-->
+        <div id="siderbar" class="siderbar-wapper">
+            <div class="panel-group menu" id="accordion" role="tablist" aria-multiselectable="true">
+                <!--客户管理-->
+                <div class="panel panel-inner">
+                    <div class="panel-heading panel-heading-self" role="tab" id="menu1">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="false"
+                               aria-controls="collapse1">
+                                <span class="glyphicon glyphicon-list-alt"></span> 客户管理
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menu1">
+                        <div class="list-group list-group-self">
+                            <a th:href="@{/customerList}" target="showiframe" class="list-group-item"><span
+                                    class="glyphicon glyphicon-menu-right"></span>客户列表</a>
+                        </div>
+                    </div>
+                </div>
+                <!--地址管理-->
+                <div class="panel panel-inner">
+                    <div class="panel-heading panel-heading-self" role="tab" id="menu2">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="false"
+                               aria-controls="collapse2">
+                                <span class="glyphicon glyphicon-list-alt"></span> 地址管理
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menu2">
+                        <div class="list-group list-group-self">
+
+                            <a th:href="@{/addressList}" target="showiframe" class="list-group-item"><span
+                                    class="glyphicon glyphicon-menu-right"></span>地址列表</a>
+                        </div>
+                    </div>
+                </div>
+                <!--员工管理-->
+                <div class="panel panel-inner">
+                    <div class="panel-heading panel-heading-self" role="tab" id="menu3">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse3" aria-expanded="false"
+                               aria-controls="collapse3">
+                                <span class="glyphicon glyphicon-list-alt"></span> 员工管理
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menu3">
+                        <div class="list-group list-group-self">
+
+                            <a th:href="@{/customerList}" target="showiframe" class="list-group-item"><span
+                                    class="glyphicon glyphicon-menu-right"></span>新增员工</a>
+                            <a th:href="@{/customerList}" target="showiframe" class="list-group-item"><span
+                                    class="glyphicon glyphicon-menu-right"></span>员工列表</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!--定价管理-->
+                <div class="panel panel-inner">
+                    <div class="panel-heading panel-heading-self" role="tab" id="menu4">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse4" aria-expanded="false"
+                               aria-controls="collapse4">
+                                <span class="glyphicon glyphicon-list-alt"></span> 定价管理
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menu4">
+                        <div class="list-group list-group-self">
+                            <a th:href="@{/priceAdd}" target="showiframe" class="list-group-item"><span
+                                class="glyphicon glyphicon-menu-right"></span>添加定价</a>
+                            <a th:href="@{/priceList}" target="showiframe" class="list-group-item"><span
+                                class="glyphicon glyphicon-menu-right"></span>定价列表</a>
+                        </div>
+                    </div>
+                </div>
+                <!--网点管理-->
+                <div class="panel panel-inner">
+                    <div class="panel-heading panel-heading-self" role="tab" id="menu5">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse5" aria-expanded="false"
+                               aria-controls="collapse5">
+                                <span class="glyphicon glyphicon-list-alt"></span> 网点管理
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menu5">
+                        <div class="list-group list-group-self">
+                            <a th:href="@{/dotAdd}" target="showiframe" class="list-group-item"><span
+                                    class="glyphicon glyphicon-menu-right"></span>新增网点</a>
+                            <a th:href="@{/dotList}" target="showiframe" class="list-group-item"><span
+                                    class="glyphicon glyphicon-menu-right"></span>网点列表</a>
+                        </div>
+                    </div>
+                </div>
+                <!--订单管理-->
+                <div class="panel panel-inner">
+                    <div class="panel-heading panel-heading-self" role="tab" id="menu6">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse6" aria-expanded="false"
+                               aria-controls="collapse6">
+                                <span class="glyphicon glyphicon-list-alt"></span> 订单管理
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse6" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menu6">
+                        <div class="list-group list-group-self">
+                            <a th:href="@{/customerList}" target="showiframe" class="list-group-item"><span
+                                    class="glyphicon glyphicon-menu-right"></span>订单列表</a>
+                        </div>
+                    </div>
+                </div>
+                <!--反馈管理-->
+                <div class="panel panel-inner">
+                    <div class="panel-heading panel-heading-self" role="tab" id="menu7">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse7" aria-expanded="false"
+                               aria-controls="collapse7">
+                                <span class="glyphicon glyphicon-list-alt"></span> 反馈管理
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse7" class="panel-collapse collapse" role="tabpanel" aria-labelledby="menu7">
+                        <div class="list-group list-group-self">
+                            <a th:href="@{/customerList}" target="showiframe" class="list-group-item"><span
+                                    class="glyphicon glyphicon-menu-right"></span>反馈列表</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--菜单-->
+        <!--内容-->
+        <div id="content" class="main-content">
+            <iframe th:src="@{welcome.html}" style="width:100%;height: 100%;" id="showiframe" name="showiframe"
+                    frameborder="0"></iframe>
+        </div>
+        <!--内容-->
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>修改客户</title>
+
+    <!-- Bootstrap -->
+    <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/content.css" rel="stylesheet">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<!--路径导航-->
+<ol class="breadcrumb breadcrumb_nav">
+    <li>首页</li>
+    <li>客户管理</li>
+    <li class="active">修改客户</li>
+</ol>
+<!--路径导航-->
+
+<div class="page-content">
+    <div class="panel panel-default">
+        <div class="panel-heading">修改客户信息</div>
+        <div class="panel-body">
+            <form th:action="@{/tCustomer/doModify}" method="post">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="hidden" th:value="${customer.customerId}" name="customerId" />
+                            <div class="form-group">
+                                <label>微信昵称</label>
+                                <input type="text" th:value="${customer.wxName}" readonly="readonly" class="form-control" id="wxName" name="wxName">
+                            </div>
+                            <div class="form-group">
+                                <label for="customerPhone">联系电话</label>
+                                <input type="number" th:value="${customer.customerPhone}" class="form-control" id="customerPhone" name="customerPhone" placeholder="联系电话">
+                            </div>
+                            <div class="form-group">
+                                <label for="realNum">身份证号</label>
+                                <input type="text" th:value="${customer.realNum}" class="form-control" id="realNum" name="realNum"
+                                       placeholder="身份证号">
+                            </div>
+                            <div class="form-group">
+                                <label for="realName">真实姓名</label>
+                                <input type="text" th:value="${customer.realName}" class="form-control" id="realName" name="realName" placeholder="真实姓名">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">修 改</button>&emsp;&emsp;
+                                <button type="reset" class="btn btn-primary">重 填</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

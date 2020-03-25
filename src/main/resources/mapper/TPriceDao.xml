@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.logistics.dao.TPriceDao">
+
+    <resultMap type="com.zero.logistics.entity.TPrice" id="TPriceMap">
+        <result property="priceId" column="price_id" jdbcType="INTEGER"/>
+        <result property="province" column="province" jdbcType="VARCHAR"/>
+        <result property="infirstPriority" column="infirst_priority" jdbcType="NUMERIC"/>
+        <result property="outFirstPriotity" column="out_first_priotity" jdbcType="NUMERIC"/>
+        <result property="inContinued" column="in_continued" jdbcType="NUMERIC"/>
+        <result property="outContinued" column="out_continued" jdbcType="NUMERIC"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TPriceMap">
+        select
+          price_id, province, infirst_priority, out_first_priotity, in_continued, out_continued
+        from speedlogisticsdb.t_price
+        where price_id = #{priceId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TPriceMap">
+        select
+          price_id, province, infirst_priority, out_first_priotity, in_continued, out_continued
+        from speedlogisticsdb.t_price
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TPriceMap">
+        select
+          price_id, province, infirst_priority, out_first_priotity, in_continued, out_continued
+        from speedlogisticsdb.t_price
+        <where>
+            <if test="priceId != null">
+                and price_id = #{priceId}
+            </if>
+            <if test="province != null and province != ''">
+                and province = #{province}
+            </if>
+            <if test="infirstPriority != null">
+                and infirst_priority = #{infirstPriority}
+            </if>
+            <if test="outFirstPriotity != null">
+                and out_first_priotity = #{outFirstPriotity}
+            </if>
+            <if test="inContinued != null">
+                and in_continued = #{inContinued}
+            </if>
+            <if test="outContinued != null">
+                and out_continued = #{outContinued}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="priceId" useGeneratedKeys="true">
+        insert into speedlogisticsdb.t_price(province, infirst_priority, out_first_priotity, in_continued, out_continued)
+        values (#{province}, #{infirstPriority}, #{outFirstPriotity}, #{inContinued}, #{outContinued})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update speedlogisticsdb.t_price
+        <set>
+            <if test="province != null and province != ''">
+                province = #{province},
+            </if>
+            <if test="infirstPriority != null">
+                infirst_priority = #{infirstPriority},
+            </if>
+            <if test="outFirstPriotity != null">
+                out_first_priotity = #{outFirstPriotity},
+            </if>
+            <if test="inContinued != null">
+                in_continued = #{inContinued},
+            </if>
+            <if test="outContinued != null">
+                out_continued = #{outContinued},
+            </if>
+        </set>
+        where price_id = #{priceId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from speedlogisticsdb.t_price where price_id = #{priceId}
+    </delete>
+
+    <!--获取总记录数-->
+    <select id="getCount" parameterType="string" resultType="int">
+        SELECT COUNT(1) FROM `t_price`
+        <if test="condition != null and condition != ''">
+            WHERE `province` LIKE CONCAT(#{condition},'%')
+        </if>
+    </select>
+
+    <!--根据条件查询页内容-->
+    <select id="pageByCondition" resultMap="TPriceMap">
+        SELECT * FROM `t_dot`
+        <if test="condition != null and condition != ''">
+            WHERE `dot_name` LIKE CONCAT(#{condition},'%')
+        </if>
+        LIMIT #{startRow}, #{pageSize}
+    </select>
+</mapper>
