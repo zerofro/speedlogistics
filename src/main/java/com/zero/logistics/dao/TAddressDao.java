@@ -78,8 +78,8 @@ public interface TAddressDao {
      */
     public int updateDefult(Integer customerId);
 
-    public int getCount(String condition);
+    public int getCount(TAddress tAddress);
 
     public List<TAddress> pageByCondition(@Param("startRow") int startRow, @Param("pageSize") int pageSize,
-                                          @Param("condition") String condition);
+                                          @Param("condition") TAddress condition);
 }

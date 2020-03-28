@@ -1,7 +1,7 @@
 package com.zero.logistics.service;
 
 import com.zero.logistics.entity.TDot;
-import com.zero.logistics.utils.Page;
+import com.zero.logistics.utils.LayPage;
 
 import java.util.List;
 
@@ -54,5 +54,5 @@ public interface TDotService {
      */
     boolean deleteById(Integer dotId);
 
-    public Page<TDot> getPage(int pageNum, int pageSize, String condition);
+    public LayPage<TDot> getPage(int page, int limit, TDot condition);
 }

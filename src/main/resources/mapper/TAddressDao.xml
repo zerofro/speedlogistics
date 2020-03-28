@@ -130,21 +130,26 @@
 
     <select id="getCount" parameterType="string" resultType="int">
         SELECT COUNT(1) FROM `t_customer` c,`t_address` a
-        WHERE c.`customer_id` = a.`customer_id`
-        <if test="condition != null and condition != ''">
-            AND (c.`wx_name` LIKE CONCAT(#{condition},'%')
-            OR a.`owner_name` LIKE CONCAT(#{condition},'%'))
+        WHERE c.`customer_id` = a.`customer_id` AND a.`state` = 1
+        <if test="wxName != null and wxName != ''">
+            AND c.`wx_name` LIKE CONCAT(#{wxName},'%')
+        </if>
+        <if test="ownerName != null and ownerName != ''">
+            AND  a.`owner_name` LIKE CONCAT(#{ownerName},'%')
         </if>
     </select>
 
     <!--根据条件查询页内容-->
     <select id="pageByCondition" resultMap="andCustomerMap">
-        SELECT c.`wx_name`,a.*
-        FROM `t_customer` c,`t_address` a
-        WHERE c.`customer_id` = a.`customer_id`
-        <if test="condition != null and condition != ''">
-            AND (c.`wx_name` LIKE CONCAT(#{condition},'%')
-            OR a.`owner_name` LIKE CONCAT(#{condition},'%'))
+        SELECT c.`wx_name`,a.* FROM `t_customer` c,`t_address` a
+        WHERE c.`customer_id` = a.`customer_id` AND a.`state` = 1
+        <if test="condition != null">
+            <if test="condition.wxName != null and condition.wxName != ''">
+                AND c.`wx_name` LIKE CONCAT(#{condition.wxName},'%')
+            </if>
+            <if test="condition.ownerName != null and condition.ownerName != ''">
+                AND  a.`owner_name` LIKE CONCAT(#{condition.ownerName},'%')
+            </if>
         </if>
         LIMIT #{startRow}, #{pageSize}
     </select>

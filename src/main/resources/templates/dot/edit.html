@@ -1,0 +1,80 @@
+<div class="layuimini-main">
+    <form id="edit-form">
+        <div class="layui-form layuimini-form">
+            <input type="hidden" name="dotId"/>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">网点名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="dotName" lay-verify="required" lay-reqtext="网点名称不能为空" placeholder="请输入网点名称" value="" class="layui-input">
+                    <tip>填写网点的名称。</tip>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">联系电话</label>
+                <div class="layui-input-block">
+                    <input type="number" name="dotPhone" lay-verify="required" lay-reqtext="联系电话不能为空" placeholder="请输入联系电话" value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">城市</label>
+                <div class="layui-input-block">
+                    <input type="text" name="dotCity"  placeholder="请输入城市" value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">详细地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="dotAddress" placeholder="请输入详细地址" value="" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form', 'table'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            table = layui.table,
+            $ = layui.$;
+
+        /**
+         * 初始化表单，要加上，不然刷新部分组件可能会不加载
+         */
+        form.render();
+
+        // 当前弹出层，防止ID被覆盖
+        var parentIndex = layer.index;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            const jsonData = data.field;
+            console.log(jsonData);
+            $.ajax({
+                type: 'POST',
+                url: "tDot/add",
+                data: jsonData,
+                dataType: 'json',
+                async: false,
+                cache: false,
+                success: function (res) {
+                    if (res){
+                        layer.close(parentIndex);
+                        table.reload('currentTableId',{});
+                    }else{
+
+                    }
+                }
+            });
+
+
+            return false;
+        });
+
+    });
+</script>

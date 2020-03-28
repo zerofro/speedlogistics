@@ -1,8 +1,9 @@
 package com.zero.logistics.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zero.logistics.entity.TAddress;
 import com.zero.logistics.service.TAddressService;
-import com.zero.logistics.utils.Page;
+import com.zero.logistics.utils.LayPage;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -58,9 +59,10 @@ public class TAddressController {
 
     @RequestMapping("getPage")
     @ResponseBody
-    public Page<TAddress> getPage(Integer pageNum, String condition){
-        Page<TAddress> page = tAddressService.getPage(pageNum, 10, condition);
-        return page;
+    public LayPage<TAddress> getPage(Integer page, Integer limit, String searchParams){
+        TAddress tAddress = JSONObject.parseObject(searchParams, TAddress.class);
+        LayPage<TAddress> layPage = tAddressService.getPage(page, limit, tAddress);
+        return layPage;
     }
 
 }

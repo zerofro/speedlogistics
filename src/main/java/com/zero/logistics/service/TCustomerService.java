@@ -1,7 +1,7 @@
 package com.zero.logistics.service;
 
 import com.zero.logistics.entity.TCustomer;
-import com.zero.logistics.utils.Page;
+import com.zero.logistics.utils.LayPage;
 
 import java.util.List;
 
@@ -63,5 +63,7 @@ public interface TCustomerService {
 
     public boolean setWxName(TCustomer tCustomer);
 
-    public Page<TCustomer> getPage(int pageNum,int pageSize,String condition);
+    public LayPage<TCustomer> getPage(int page, int limit, TCustomer condition);
+
+    public boolean batchDelete(List<Integer> customerIdList);
 }

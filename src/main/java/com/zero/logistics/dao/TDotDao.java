@@ -62,8 +62,8 @@ public interface TDotDao {
      */
     int deleteById(Integer dotId);
 
-    public int getCount(String condition);
+    public int getCount(TDot condition);
 
     public List<TDot> pageByCondition(@Param("startRow") int startRow, @Param("pageSize") int pageSize,
-                                      @Param("condition") String condition);
+                                      @Param("condition") TDot condition);
 }

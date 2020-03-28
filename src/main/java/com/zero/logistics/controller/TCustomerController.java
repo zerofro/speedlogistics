@@ -5,14 +5,15 @@ import com.zero.logistics.constants.Constant;
 import com.zero.logistics.entity.TCustomer;
 import com.zero.logistics.service.TCustomerService;
 import com.zero.logistics.utils.HttpRequestUtil;
-import com.zero.logistics.utils.Page;
+import com.zero.logistics.utils.LayPage;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * (TCustomer)表控制层
@@ -67,28 +68,39 @@ public class TCustomerController {
 
     @RequestMapping("getPage")
     @ResponseBody
-    public Page<TCustomer> getPage(Integer pageNum,String condition){
-        Page<TCustomer> customerPage = tCustomerService.getPage(pageNum, 10, condition);
-        return customerPage;
+    public LayPage<TCustomer> getPage(Integer page, Integer limit, String searchParams){
+        TCustomer tCustomer = JSONObject.parseObject(searchParams, TCustomer.class);
+        LayPage<TCustomer> layPage = tCustomerService.getPage(page, limit, tCustomer);
+        return layPage;
     }
 
-    @RequestMapping("toModify")
-    public String toModify(Integer customerId, Model model){
-        TCustomer tCustomer = tCustomerService.queryById(customerId);
-        model.addAttribute("customer", tCustomer);
-        return "/customer/modify";
-    }
 
-    @RequestMapping("doModify")
-    public String doModify(TCustomer tCustomer){
-        tCustomerService.update(tCustomer);
-        return "redirect:/customerList";
+    @RequestMapping("doEdit")
+    @ResponseBody
+    public boolean doModify(TCustomer tCustomer){
+        try {
+            tCustomerService.update(tCustomer);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @RequestMapping("/delete")
     @ResponseBody
     public boolean delete(Integer customerId){
         boolean flag = tCustomerService.deleteById(customerId);
+        return flag;
+    }
+
+    @RequestMapping("batchDelete")
+    @ResponseBody
+    public boolean batchDelete(Integer[] customerIds){
+        if (null == customerIds || customerIds.length == 0)
+            return false;
+        List<Integer> customerIdList = Arrays.asList(customerIds);
+        boolean flag = tCustomerService.batchDelete(customerIdList);
         return flag;
     }
 }

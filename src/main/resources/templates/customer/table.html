@@ -1,0 +1,233 @@
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">微信昵称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="wxName" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">联系电话</label>
+                            <div class="layui-input-inline">
+                                <input type="number" name="customerPhone" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">身份证号码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="realNum" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">真实姓名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="realName" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除用户 </button>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+        </script>
+
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'table','miniPage','element'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+            miniPage = layui.miniPage;
+
+        table.render({
+            elem: '#currentTableId',
+            url: '/tCustomer/getPage',
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            cols: [
+                [
+                {type: "checkbox", width: 50, fixed: "left"},
+                {field: 'customerId', width: 80, title: 'ID', sort: true},
+                {field: 'wxName', minWidth: 200, title: '微信昵称'},
+                {field: 'customerPhone', width: 200, title: '联系电话'},
+                {field: 'realNum', minWidth: 250, title: '身份证号码'},
+                {field: 'realName', title: '真实姓名', width: 150},
+                {title: '操作', width: 150, templet: '#currentTableBar', fixed: "right", align: "center"}
+                ]
+            ],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 15,
+            page: true
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+            /*layer.alert(result, {
+                title: '最终的搜索信息'
+            });*/
+
+            //执行搜索重载
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    searchParams: result
+                }
+            }, 'data');
+
+            return false;
+        });
+
+        /**
+         * toolbar事件监听
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('currentTableId')
+                    , data = checkStatus.data;
+                if (null != data && data.length > 0){
+                    layer.confirm("确定要删除吗？",function (index) {
+                        var customerIds = new Array();
+                        $.each(data,function (i,item) {
+                            customerIds.push(item.customerId);
+                        });
+                        $.ajax({
+                            type: 'POST',
+                            url: "tCustomer/batchDelete",
+                            data: {
+                                'customerIds': customerIds
+                            },
+                            cache:false,
+                            dataType:'json',
+                            async:true,
+                            traditional:true,//这个参数必须添加，采用传统方式转换
+                            success: function (res) {
+                                console.log(res);
+                                layer.alert("删除成功");
+                                // obj.del();
+                                table.reload('currentTableId',{});
+                                layer.close(index);
+                            },
+                            error:function (res) {
+                                console.log(res);
+                                layer.close(index);
+                                layer.alert("删除失败！！！");
+                            }
+                        });
+                    });
+                }
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            // console.log(obj);
+            if (obj.event === 'edit') {
+                var content = miniPage.getHrefContent("customerEdit");
+                var openWH = miniPage.getOpenWidthHeight();
+
+                var index = layer.open({
+                    title: '编辑客户',
+                    type: 1,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: [openWH[0] + 'px', openWH[1] + 'px'],
+                    offset: [openWH[2] + 'px', openWH[3] + 'px'],
+                    content: content,
+                    success: function (layero, index) {
+                        // console.log($(".edit-from input[name='wxName']").val());
+                        $(".edit-from input[name='customerId']").val(data.customerId);
+                        $(".edit-from input[name='wxName']").val(data.wxName);
+                        $(".edit-from input[name='customerPhone']").val(data.customerPhone);
+                        $(".edit-from input[name='realNum']").val(data.realNum);
+                        $(".edit-from input[name='realName']").val(data.realName);
+                    },
+                    btn: ['修改','取消'],
+                    btn1: function (index, layero) {
+                        // console.log('修改');
+                        // const customerId = $(".edit-from input[name='customerId']").val();
+                        var formData = new FormData($("#editForm")[0]);
+                        // console.log(formData.get('customerId'));
+                        $.ajax({
+                            type: 'POST',
+                            url: "tCustomer/doEdit",
+                            data: formData,
+                            processData: false,   // jQuery不要去处理发送的数据
+                            contentType: false,
+                            success: function (res) {
+                                if (res){
+                                    layer.close(index);
+                                    obj.update({
+                                        wxName: formData.get("wxName"),
+                                        customerPhone: formData.get("customerPhone"),
+                                        realNum: formData.get("realNum"),
+                                        realName: formData.get("realName"),
+                                    });
+                                }else{
+                                    layer.alert("修改失败！！！");
+                                }
+                            }
+                        });
+                    },
+                    btn2: function (index, layero) {
+                        console.log('取消');
+                        layer.close(index);
+                    }
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('真的删除行么', function (index) {
+                    $.get({
+                       url: "tCustomer/delete?customerId="+data.customerId,
+                       success: function (res) {
+                           if (res){
+                               obj.del();
+                           }else{
+                               layer.alert("删除失败！！！");
+                           }
+                           layer.close(index);
+                       }
+                    });
+                });
+            }
+        });
+
+    });
+</script>

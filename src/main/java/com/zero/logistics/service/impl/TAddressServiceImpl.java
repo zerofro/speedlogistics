@@ -3,7 +3,7 @@ package com.zero.logistics.service.impl;
 import com.zero.logistics.dao.TAddressDao;
 import com.zero.logistics.entity.TAddress;
 import com.zero.logistics.service.TAddressService;
-import com.zero.logistics.utils.Page;
+import com.zero.logistics.utils.LayPage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,10 +94,11 @@ public class TAddressServiceImpl implements TAddressService {
     }
 
     @Override
-    public Page<TAddress> getPage(int pageNum, int pageSize, String condition) {
-        int count = tAddressDao.getCount(condition);
-        List<TAddress> list = tAddressDao.pageByCondition((pageNum - 1) * pageSize, pageSize, condition);
-        Page<TAddress> page = new Page<>(pageNum, pageSize, count, list);
-        return page;
+    public LayPage<TAddress> getPage(int page, int limit, TAddress tAddress) {
+        int count = tAddressDao.getCount(tAddress);
+        List<TAddress> data = tAddressDao.pageByCondition((page - 1) * limit, limit, tAddress);
+        LayPage<TAddress> layPage = new LayPage<>(count, data);
+        return layPage;
     }
+
 }

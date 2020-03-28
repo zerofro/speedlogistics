@@ -1,8 +1,9 @@
 package com.zero.logistics.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zero.logistics.entity.TDot;
 import com.zero.logistics.service.TDotService;
-import com.zero.logistics.utils.Page;
+import com.zero.logistics.utils.LayPage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,23 +27,30 @@ public class TDotController {
     private TDotService tDotService;
 
     @RequestMapping("add")
-    public String add(TDot tDot){
-        tDotService.insert(tDot);
-        return "redirect:/dotList";
+    @ResponseBody
+    public boolean add(TDot tDot){
+        try {
+            tDotService.insert(tDot);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @RequestMapping("getPage")
     @ResponseBody
-    public Page<TDot> getPage(Integer pageNum, String condition){
-        Page<TDot> page = tDotService.getPage(pageNum, 10, condition);
-        return page;
+    public LayPage<TDot> getPage(Integer page, Integer limit, String searchParams){
+        TDot tDot = JSONObject.parseObject(searchParams, TDot.class);
+        LayPage<TDot> layPage = tDotService.getPage(page, limit, tDot);
+        return layPage;
     }
 
-    @RequestMapping("toModify")
+    @RequestMapping("toEdit")
     public String toModify(Integer dotId, Model model){
         TDot tDot = tDotService.queryById(dotId);
         model.addAttribute("dot", tDot);
-        return "/dot/modify";
+        return "dot/edit";
     }
 
     @RequestMapping("doModify")

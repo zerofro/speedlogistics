@@ -6,10 +6,10 @@ import java.io.Serializable;
  * (TDot)实体类
  *
  * @author makejava
- * @since 2020-03-22 20:17:55
+ * @since 2020-03-28 14:39:23
  */
 public class TDot implements Serializable {
-    private static final long serialVersionUID = 425960082483534035L;
+    private static final long serialVersionUID = 819862913258224184L;
     /**
     * 网点编号
     */
@@ -30,6 +30,10 @@ public class TDot implements Serializable {
     * 网点联系号码
     */
     private String dotPhone;
+    /**
+    * 状态
+    */
+    private Integer state;
 
 
     public Integer getDotId() {
@@ -70,6 +74,14 @@ public class TDot implements Serializable {
 
     public void setDotPhone(String dotPhone) {
         this.dotPhone = dotPhone;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 
 }

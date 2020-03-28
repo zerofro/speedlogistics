@@ -1,9 +1,9 @@
 package com.zero.logistics.service.impl;
 
-import com.zero.logistics.entity.TDot;
 import com.zero.logistics.dao.TDotDao;
+import com.zero.logistics.entity.TDot;
 import com.zero.logistics.service.TDotService;
-import com.zero.logistics.utils.Page;
+import com.zero.logistics.utils.LayPage;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -79,10 +79,10 @@ public class TDotServiceImpl implements TDotService {
     }
 
     @Override
-    public Page<TDot> getPage(int pageNum, int pageSize, String condition) {
+    public LayPage<TDot> getPage(int page, int limit, TDot condition) {
         int count = tDotDao.getCount(condition);
-        List<TDot> list = tDotDao.pageByCondition((pageNum - 1) * pageSize, pageSize, condition);
-        Page<TDot> page = new Page<>(pageNum, pageSize, count, list);
-        return page;
+        List<TDot> data = tDotDao.pageByCondition((page - 1) * limit, limit, condition);
+        LayPage<TDot> layPage = new LayPage<>(count, data);
+        return layPage;
     }
 }

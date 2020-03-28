@@ -67,8 +67,12 @@ public interface TCustomerDao {
 
     public int setWxName(TCustomer tCustomer);
 
-    public int getCount(String condition);
+    public int getCount(TCustomer condition);
 
     public List<TCustomer> pageByCondition(@Param("startRow") int startRow, @Param("pageSize") int pageSize,
-                                           @Param("condition") String condition);
+                                           @Param("condition") TCustomer condition);
+
+    public int batchDelete(@Param("customerIdList") List<Integer> customerIdList);
+
+    public int removeById(Integer customerId);
 }

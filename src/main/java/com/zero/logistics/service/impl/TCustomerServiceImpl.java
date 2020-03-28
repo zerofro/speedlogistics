@@ -3,7 +3,7 @@ package com.zero.logistics.service.impl;
 import com.zero.logistics.dao.TCustomerDao;
 import com.zero.logistics.entity.TCustomer;
 import com.zero.logistics.service.TCustomerService;
-import com.zero.logistics.utils.Page;
+import com.zero.logistics.utils.LayPage;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -75,7 +75,7 @@ public class TCustomerServiceImpl implements TCustomerService {
      */
     @Override
     public boolean deleteById(Integer customerId) {
-        return this.tCustomerDao.deleteById(customerId) > 0;
+        return this.tCustomerDao.removeById(customerId) > 0;
     }
 
     @Override
@@ -91,10 +91,16 @@ public class TCustomerServiceImpl implements TCustomerService {
     }
 
     @Override
-    public Page<TCustomer> getPage(int pageNum, int pageSize, String condition) {
+    public LayPage<TCustomer> getPage(int page, int limit, TCustomer condition) {
         int count = tCustomerDao.getCount(condition);
-        List<TCustomer> list = tCustomerDao.pageByCondition((pageNum - 1) * pageSize, pageSize, condition);
-        Page<TCustomer> page = new Page<>(pageNum, pageSize, count, list);
-        return page;
+        List<TCustomer> data = tCustomerDao.pageByCondition((page - 1) * limit, limit, condition);
+        LayPage<TCustomer> layPage = new LayPage<>(count, data);
+        return layPage;
+    }
+
+    @Override
+    public boolean batchDelete(List<Integer> customerIdList) {
+        int rows = tCustomerDao.batchDelete(customerIdList);
+        return rows > 0;
     }
 }

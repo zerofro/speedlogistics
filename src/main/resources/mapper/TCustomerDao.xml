@@ -109,21 +109,57 @@
     </update>
 
     <!--获取总记录数-->
-    <select id="getCount" parameterType="string" resultType="int">
+    <select id="getCount" resultType="int">
         SELECT COUNT(1) FROM `t_customer`
-        <if test="condition != null and condition != ''">
-            WHERE `wx_name` LIKE CONCAT(#{condition},'%')
-            OR `real_name` LIKE CONCAT(#{condition},'%')
+        where `state` = 1
+        <if test="wxName != null and wxName != ''">
+            and `wx_name` LIKE CONCAT(#{wxName},'%')
+        </if>
+        <if test="customerPhone != null and customerPhone != ''">
+            and customer_phone = #{customerPhone}
+        </if>
+        <if test="realNum != null and realNum != ''">
+            and real_num = #{realNum}
+        </if>
+        <if test="realName != null and realName != ''">
+            and `real_name` LIKE CONCAT(#{realName},'%')
         </if>
     </select>
 
     <!--根据条件查询页内容-->
     <select id="pageByCondition" resultMap="TCustomerMap">
         SELECT * FROM `t_customer`
-        <if test="condition != null and condition != ''">
-            WHERE `wx_name` LIKE CONCAT(#{condition},'%')
-            OR `real_name` LIKE CONCAT(#{condition},'%')
+        where `state` = 1
+        <if test="condition != null">
+            <if test="condition.wxName != null and condition.wxName != ''">
+                and `wx_name` LIKE CONCAT(#{condition.wxName},'%')
+            </if>
+            <if test="condition.customerPhone != null and condition.customerPhone != ''">
+                and customer_phone LIKE CONCAT(#{condition.customerPhone},'%')
+            </if>
+            <if test="condition.realNum != null and condition.realNum != ''">
+                and real_num LIKE CONCAT(#{condition.realNum},'%')
+            </if>
+            <if test="condition.realName != null and condition.realName != ''">
+                and `real_name` LIKE CONCAT(#{condition.realName},'%')
+            </if>
         </if>
         LIMIT #{startRow}, #{pageSize}
     </select>
+
+    <update id="batchDelete">
+        UPDATE `t_customer` SET `state` = 0
+        <where>
+            `customer_id` in
+            <foreach collection="customerIdList" item="item"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </update>
+
+    <update id="removeById">
+        UPDATE `t_customer` SET `state` = 0
+        where `customer_id` = #{customerId}
+    </update>
 </mapper>

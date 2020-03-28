@@ -8,12 +8,13 @@
         <result property="dotAddress" column="dot_address" jdbcType="VARCHAR"/>
         <result property="dotName" column="dot_name" jdbcType="VARCHAR"/>
         <result property="dotPhone" column="dot_phone" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="TDotMap">
         select
-          dot_id, dot_city, dot_address, dot_name, dot_phone
+          dot_id, dot_city, dot_address, dot_name, dot_phone, state
         from speedlogisticsdb.t_dot
         where dot_id = #{dotId}
     </select>
@@ -21,7 +22,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="TDotMap">
         select
-          dot_id, dot_city, dot_address, dot_name, dot_phone
+          dot_id, dot_city, dot_address, dot_name, dot_phone, state
         from speedlogisticsdb.t_dot
         limit #{offset}, #{limit}
     </select>
@@ -29,7 +30,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TDotMap">
         select
-          dot_id, dot_city, dot_address, dot_name, dot_phone
+          dot_id, dot_city, dot_address, dot_name, dot_phone, state
         from speedlogisticsdb.t_dot
         <where>
             <if test="dotId != null">
@@ -46,6 +47,9 @@
             </if>
             <if test="dotPhone != null and dotPhone != ''">
                 and dot_phone = #{dotPhone}
+            </if>
+            <if test="state != null">
+                and state = #{state}
             </if>
         </where>
     </select>
@@ -72,6 +76,9 @@
             <if test="dotPhone != null and dotPhone != ''">
                 dot_phone = #{dotPhone},
             </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
         </set>
         where dot_id = #{dotId}
     </update>
@@ -82,18 +89,32 @@
     </delete>
 
     <!--获取总记录数-->
-    <select id="getCount" parameterType="string" resultType="int">
-        SELECT COUNT(1) FROM `t_dot`
-        <if test="condition != null and condition != ''">
-            WHERE `dot_name` LIKE CONCAT(#{condition},'%')
+    <select id="getCount" resultType="int">
+        SELECT COUNT(1) FROM `t_dot` where `state` = 1
+        <if test="dotName != null and dotName != ''">
+            and dot_name LIKE CONCAT(#{dotName},'%')
+        </if>
+        <if test="dotCity != null and dotCity != ''">
+            and dot_city LIKE CONCAT(#{dotCity},'%')
+        </if>
+        <if test="dotPhone != null and dotPhone != ''">
+            and dot_phone LIKE CONCAT(#{dotPhone},'%')
         </if>
     </select>
 
     <!--根据条件查询页内容-->
     <select id="pageByCondition" resultMap="TDotMap">
-        SELECT * FROM `t_dot`
+        SELECT * FROM `t_dot` where `state` = 1
         <if test="condition != null and condition != ''">
-            WHERE `dot_name` LIKE CONCAT(#{condition},'%')
+            <if test="condition.dotName != null and condition.dotName != ''">
+                and dot_name LIKE CONCAT(#{condition.dotName},'%')
+            </if>
+            <if test="condition.dotCity != null and condition.dotCity != ''">
+                and dot_city LIKE CONCAT(#{condition.dotCity},'%')
+            </if>
+            <if test="condition.dotPhone != null and condition.dotPhone != ''">
+                and dot_phone LIKE CONCAT(#{condition.dotPhone},'%')
+            </if>
         </if>
         LIMIT #{startRow}, #{pageSize}
     </select>
