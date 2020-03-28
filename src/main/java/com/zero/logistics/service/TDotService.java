@@ -54,5 +54,19 @@ public interface TDotService {
      */
     boolean deleteById(Integer dotId);
 
+    /**
+     * 获取页内容
+     * @param page 当前页码
+     * @param limit 页内最大记录数
+     * @param condition 条件
+     * @return 页对象
+     */
     public LayPage<TDot> getPage(int page, int limit, TDot condition);
+
+    /**
+     * 批量删除数据
+     * @param dotIds 主键列表
+     * @return 是否成功
+     */
+    public boolean batchDelete(List<Integer> dotIds);
 }

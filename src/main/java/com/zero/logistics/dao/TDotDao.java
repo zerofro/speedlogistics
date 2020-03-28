@@ -66,4 +66,11 @@ public interface TDotDao {
 
     public List<TDot> pageByCondition(@Param("startRow") int startRow, @Param("pageSize") int pageSize,
                                       @Param("condition") TDot condition);
+
+    /**
+     * 批量删除记录
+     * @param dotIds 主键列表
+     * @return 受影响的行数
+     */
+    public int batchDelete(@Param("dotIds") List<Integer> dotIds);
 }

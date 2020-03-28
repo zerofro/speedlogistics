@@ -57,7 +57,7 @@
             console.log(jsonData);
             $.ajax({
                 type: 'POST',
-                url: "tDot/add",
+                url: "tDot/save",
                 data: jsonData,
                 dataType: 'json',
                 async: false,
@@ -67,11 +67,10 @@
                         layer.close(parentIndex);
                         table.reload('currentTableId',{});
                     }else{
-
+                        layer.alert("保存失败！！！");
                     }
                 }
             });
-
 
             return false;
         });

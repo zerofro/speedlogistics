@@ -85,4 +85,15 @@ public class TDotServiceImpl implements TDotService {
         LayPage<TDot> layPage = new LayPage<>(count, data);
         return layPage;
     }
+
+    /**
+     * 批量删除数据
+     * @param dotIds 主键列表
+     * @return 是否成功
+     */
+    @Override
+    public boolean batchDelete(List<Integer> dotIds) {
+        int rows = tDotDao.batchDelete(dotIds);
+        return rows > 0;
+    }
 }

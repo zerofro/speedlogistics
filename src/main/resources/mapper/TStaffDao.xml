@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.logistics.dao.TStaffDao">
+
+    <resultMap type="com.zero.logistics.entity.TStaff" id="TStaffMap">
+        <result property="staffId" column="staff_id" jdbcType="INTEGER"/>
+        <result property="wxId" column="wx_id" jdbcType="VARCHAR"/>
+        <result property="staffName" column="staff_name" jdbcType="VARCHAR"/>
+        <result property="staffLoginName" column="staff_login_name" jdbcType="VARCHAR"/>
+        <result property="staffPassword" column="staff_password" jdbcType="VARCHAR"/>
+        <result property="staffAge" column="staff_age" jdbcType="INTEGER"/>
+        <result property="staffSex" column="staff_sex" jdbcType="VARCHAR"/>
+        <result property="staffPhone" column="staff_phone" jdbcType="VARCHAR"/>
+        <result property="hiredate" column="hiredate" jdbcType="TIMESTAMP"/>
+        <result property="dotId" column="dot_id" jdbcType="INTEGER"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TStaffMap">
+        select
+          staff_id, wx_id, staff_name, staff_login_name, staff_password, staff_age, staff_sex, staff_phone, hiredate, dot_id, state
+        from speedlogisticsdb.t_staff
+        where staff_id = #{staffId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TStaffMap">
+        select
+          staff_id, wx_id, staff_name, staff_login_name, staff_password, staff_age, staff_sex, staff_phone, hiredate, dot_id, state
+        from speedlogisticsdb.t_staff
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TStaffMap">
+        select
+          staff_id, wx_id, staff_name, staff_login_name, staff_password, staff_age, staff_sex, staff_phone, hiredate, dot_id, state
+        from speedlogisticsdb.t_staff
+        <where>
+            <if test="staffId != null">
+                and staff_id = #{staffId}
+            </if>
+            <if test="wxId != null and wxId != ''">
+                and wx_id = #{wxId}
+            </if>
+            <if test="staffName != null and staffName != ''">
+                and staff_name = #{staffName}
+            </if>
+            <if test="staffLoginName != null and staffLoginName != ''">
+                and staff_login_name = #{staffLoginName}
+            </if>
+            <if test="staffPassword != null and staffPassword != ''">
+                and staff_password = #{staffPassword}
+            </if>
+            <if test="staffAge != null">
+                and staff_age = #{staffAge}
+            </if>
+            <if test="staffSex != null and staffSex != ''">
+                and staff_sex = #{staffSex}
+            </if>
+            <if test="staffPhone != null and staffPhone != ''">
+                and staff_phone = #{staffPhone}
+            </if>
+            <if test="hiredate != null">
+                and hiredate = #{hiredate}
+            </if>
+            <if test="dotId != null">
+                and dot_id = #{dotId}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="staffId" useGeneratedKeys="true">
+        insert into speedlogisticsdb.t_staff(wx_id, staff_name, staff_login_name, staff_password, staff_age, staff_sex, staff_phone, hiredate, dot_id, state)
+        values (#{wxId}, #{staffName}, #{staffLoginName}, #{staffPassword}, #{staffAge}, #{staffSex}, #{staffPhone}, #{hiredate}, #{dotId}, #{state})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update speedlogisticsdb.t_staff
+        <set>
+            <if test="wxId != null and wxId != ''">
+                wx_id = #{wxId},
+            </if>
+            <if test="staffName != null and staffName != ''">
+                staff_name = #{staffName},
+            </if>
+            <if test="staffLoginName != null and staffLoginName != ''">
+                staff_login_name = #{staffLoginName},
+            </if>
+            <if test="staffPassword != null and staffPassword != ''">
+                staff_password = #{staffPassword},
+            </if>
+            <if test="staffAge != null">
+                staff_age = #{staffAge},
+            </if>
+            <if test="staffSex != null and staffSex != ''">
+                staff_sex = #{staffSex},
+            </if>
+            <if test="staffPhone != null and staffPhone != ''">
+                staff_phone = #{staffPhone},
+            </if>
+            <if test="hiredate != null">
+                hiredate = #{hiredate},
+            </if>
+            <if test="dotId != null">
+                dot_id = #{dotId},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+        </set>
+        where staff_id = #{staffId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from speedlogisticsdb.t_staff where staff_id = #{staffId}
+    </delete>
+
+</mapper>

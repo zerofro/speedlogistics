@@ -102,7 +102,7 @@
          */
         table.on('toolbar(currentTableFilter)', function (obj) {
             if (obj.event === 'add') {   // 监听添加操作
-                var content = miniPage.getHrefContent('dotAdd');
+                var content = miniPage.getHrefContent('dotEdit');
                 var openWH = miniPage.getOpenWidthHeight();
 
                 var index = layer.open({
@@ -121,7 +121,35 @@
             } else if (obj.event === 'delete') {  // 监听删除操作
                 var checkStatus = table.checkStatus('currentTableId')
                     , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
+                if (null != data && data.length > 0){
+                    layer.confirm("确定要删除吗？",function (index) {
+                        var dotIds = new Array();
+                        $.each(data,function (i,item) {
+                            dotIds.push(item.dotId);
+                        });
+                        $.ajax({
+                            type: 'POST',
+                            url: "tDot/batchDelete",
+                            data: {
+                                'dotIds': dotIds
+                            },
+                            dataType: 'json',
+                            async: false,
+                            cache: false,
+                            traditional:true,//这个参数必须添加，采用传统方式转换
+                            success: function (res) {
+                                console.log(res);
+                                layer.alert("删除成功");
+                                table.reload('currentTableId',{});
+                            },
+                            error:function (res) {
+                                console.log(res);
+                                layer.alert("删除失败！！！");
+                            }
+                        });
+                        layer.close(index);
+                    })
+                }
             }
         });
 
@@ -130,11 +158,14 @@
             console.log(obj)
         });
 
+        /**
+         * 编辑与删除监听事件
+         */
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
 
-                var content = miniPage.getHrefContent('tDot/toEdit');
+                var content = miniPage.getHrefContent('dotEdit');
                 var openWH = miniPage.getOpenWidthHeight();
 
                 var index = layer.open({
@@ -147,9 +178,7 @@
                     offset: [openWH[2] + 'px', openWH[3] + 'px'],
                     content: content,
                     success: function (layero, index) {
-                        console.log(data.dotId);
                         $("#edit-form input[name='dotId']").val(data.dotId);
-                        console.log($("#edit-form input[name='dotId']").val());
                         $("#edit-form input[name='dotCity']").val(data.dotCity);
                         $("#edit-form input[name='dotAddress']").val(data.dotAddress);
                         $("#edit-form input[name='dotName']").val(data.dotName);
@@ -162,8 +191,17 @@
                 return false;
             } else if (obj.event === 'delete') {
                 layer.confirm('真的删除行么', function (index) {
-                    obj.del();
-                    layer.close(index);
+                    $.get({
+                        url: "tDot/delete?dotId="+data.dotId,
+                        success: function (res) {
+                            if (res){
+                                obj.del();
+                            }else{
+                                layer.alert("删除失败！！！");
+                            }
+                            layer.close(index);
+                        }
+                    });
                 });
             }
         });

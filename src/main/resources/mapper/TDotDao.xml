@@ -118,4 +118,16 @@
         </if>
         LIMIT #{startRow}, #{pageSize}
     </select>
+
+    <!--批量删除记录-->
+    <update id="batchDelete">
+        UPDATE `t_dot` SET `state` = 0
+        <where>
+            `dot_id` IN
+            <foreach collection="dotIds" item="item"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </update>
 </mapper>
