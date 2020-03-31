@@ -130,4 +130,10 @@
             </foreach>
         </where>
     </update>
+
+    <!--无效化网点-->
+    <update id="invalidById">
+        UPDATE `t_dot` SET `state` = 0
+        WHERE `dot_id` = #{dotId}
+    </update>
 </mapper>

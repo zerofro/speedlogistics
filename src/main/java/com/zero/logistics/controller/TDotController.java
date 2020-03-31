@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * (TDot)表控制层
@@ -75,5 +76,11 @@ public class TDotController {
     public boolean batchDelete(Integer[] dotIds){
         boolean flag = tDotService.batchDelete(Arrays.asList(dotIds));
         return flag;
+    }
+
+    @RequestMapping("queryAll")
+    public List<TDot> queryAll(){
+        List<TDot> tDots = tDotService.queryAllByLimit(0, 100);
+        return tDots;
     }
 }

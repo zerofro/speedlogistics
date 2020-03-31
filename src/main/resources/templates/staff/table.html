@@ -1,0 +1,246 @@
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">员工名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="staffName" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">联系电话</label>
+                            <div class="layui-input-inline">
+                                <input type="number" name="staffPhone" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">所属网点</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="dotName" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加网点 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除网点 </button>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+        </script>
+    </div>
+</div>
+
+<script>
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
+
+    layui.use(['form', 'table','miniPage','element'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+            miniPage = layui.miniPage;
+
+        table.render({
+            elem: '#currentTableId',
+            url: '/tStaff/getPage',
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            cols: [
+                [
+                {type: "checkbox", width: 50, fixed: "left"},
+                {field: 'staffId', width: 80, title: 'ID', sort: true},
+                {field: 'dotName', minWidth: 180, title: '网点名称'},
+                {field: 'staffName', width: 200, title: '姓名'},
+                {field: 'staffLoginName', minWidth: 200, title: '账号'},
+                {field: 'staffPassword', minWidth: 200, title: '密码'},
+                {field: 'staffAge', width: 100, title: '年龄'},
+                {field: 'staffSex', width: 80, title: '性别'},
+                {field: 'staffPhone', width: 200, title: '联系电话'},
+                {field: 'hiredate', width: 200, title: '入职日期',templet: '<div>{{layui.util.toDateString(d.hiredate, "yyyy-MM-dd") }}</div>'},
+                {title: '操作', width: 150, templet: '#currentTableBar', fixed: "right", align: "center"}
+                ]
+            ],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 15,
+            page: true
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+
+            //执行搜索重载
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    searchParams: result
+                }
+            }, 'data');
+
+            return false;
+        });
+
+        /**
+         * toolbar事件监听
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'add') {   // 监听添加操作
+                var content = miniPage.getHrefContent('staffEdit');
+                var openWH = miniPage.getOpenWidthHeight();
+
+                var index = layer.open({
+                    title: '添加网点',
+                    type: 1,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: [openWH[0] + 'px', openWH[1] + 'px'],
+                    offset: [openWH[2] + 'px', openWH[3] + 'px'],
+                    content: content,
+                    success: function () {
+                        $.getJSON("tDot/queryAll",function (res) {
+                            $.each(res, function (i,item) {
+                                const html = "<option value=\""+item.dotId+"\">"+item.dotName+"</option>";
+                                $("#dotSelect").append(html);
+                            });
+                            form.render('select');
+                        });
+                    }
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('currentTableId')
+                    , data = checkStatus.data;
+                if (null != data && data.length > 0){
+                    layer.confirm("确定要删除吗？",function (index) {
+                        var ids = new Array();
+                        $.each(data,function (i,item) {
+                            ids.push(item.staffId);
+                        });
+                        $.ajax({
+                            type: 'POST',
+                            url: "tStaff/batchDelete",
+                            data: {
+                                'ids': ids
+                            },
+                            dataType: 'json',
+                            async: false,
+                            cache: false,
+                            traditional:true,//这个参数必须添加，采用传统方式转换
+                            success: function (res) {
+                                console.log(res);
+                                layer.alert("删除成功");
+                                table.reload('currentTableId',{});
+                            },
+                            error:function (res) {
+                                console.log(res);
+                                layer.alert("删除失败！！！");
+                            }
+                        });
+                        layer.close(index);
+                    })
+                }
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        /**
+         * 编辑与删除监听事件
+         */
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                var content = miniPage.getHrefContent('staffEdit');
+                var openWH = miniPage.getOpenWidthHeight();
+
+                var index = layer.open({
+                    title: '编辑网点',
+                    type: 1,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: [openWH[0] + 'px', openWH[1] + 'px'],
+                    offset: [openWH[2] + 'px', openWH[3] + 'px'],
+                    content: content,
+                    success: function (layero, index) {
+                        $.getJSON("tDot/queryAll",function (res) {
+                            $.each(res, function (i,item) {
+                                const html = "<option value=\""+item.dotId+"\">"+item.dotName+"</option>";
+                                $("#dotSelect").append(html);
+                            });
+                            $("#dotSelect").val(data.dotId);
+                            form.render('select');
+                        });
+                        $("#edit-form input[name='staffId']").val(data.staffId);
+                        $("#edit-form input[name='staffName']").val(data.staffName);
+                        $("#edit-form input[name='staffLoginName']").val(data.staffLoginName);
+                        $("#edit-form input[name='staffPassword']").val(data.staffPassword);
+                        $("#edit-form input[name='staffAge']").val(data.staffAge);
+                        $("#edit-form input[name='staffSex'][value='"+data.staffSex+"']").attr('checked','true');
+                        form.render('radio');
+                        $("#edit-form input[name='staffPhone']").val(data.staffPhone);
+                        let hiredate = new Date(data.hiredate).Format('yyyy-MM-dd');
+                        $("#date").val(hiredate);
+                    },
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('真的删除行么', function (index) {
+                    $.get({
+                        url: "tStaff/delete?id="+data.staffId,
+                        success: function (res) {
+                            if (res){
+                                obj.del();
+                            }else{
+                                layer.alert("删除失败！！！");
+                            }
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+    });
+</script>

@@ -1,5 +1,7 @@
 package com.zero.logistics.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 import java.io.Serializable;
 
@@ -7,10 +9,10 @@ import java.io.Serializable;
  * (TStaff)实体类
  *
  * @author makejava
- * @since 2020-03-28 20:46:10
+ * @since 2020-03-29 15:43:31
  */
 public class TStaff implements Serializable {
-    private static final long serialVersionUID = -62012903068725699L;
+    private static final long serialVersionUID = 961262589423554673L;
     /**
     * 配送员编号
     */
@@ -44,9 +46,14 @@ public class TStaff implements Serializable {
     */
     private String staffPhone;
     /**
-    * 入职时间
+    * 雇用时间
     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date hiredate;
+    /**
+    * 解雇日期
+    */
+    private Date firedata;
     /**
     * 网点id
     */
@@ -55,6 +62,7 @@ public class TStaff implements Serializable {
     * 是否在职
     */
     private Integer state;
+    private String dotName;
 
 
     public Integer getStaffId() {
@@ -129,6 +137,14 @@ public class TStaff implements Serializable {
         this.hiredate = hiredate;
     }
 
+    public Date getFiredata() {
+        return firedata;
+    }
+
+    public void setFiredata(Date firedata) {
+        this.firedata = firedata;
+    }
+
     public Integer getDotId() {
         return dotId;
     }
@@ -145,4 +161,11 @@ public class TStaff implements Serializable {
         this.state = state;
     }
 
+    public String getDotName() {
+        return dotName;
+    }
+
+    public void setDotName(String dotName) {
+        this.dotName = dotName;
+    }
 }

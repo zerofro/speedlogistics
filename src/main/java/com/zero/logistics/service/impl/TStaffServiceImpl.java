@@ -3,6 +3,7 @@ package com.zero.logistics.service.impl;
 import com.zero.logistics.entity.TStaff;
 import com.zero.logistics.dao.TStaffDao;
 import com.zero.logistics.service.TStaffService;
+import com.zero.logistics.utils.LayPage;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -75,5 +76,20 @@ public class TStaffServiceImpl implements TStaffService {
     @Override
     public boolean deleteById(Integer staffId) {
         return this.tStaffDao.deleteById(staffId) > 0;
+    }
+
+
+    @Override
+    public LayPage<TStaff> getPage(int page, int limit, TStaff condition) {
+        int count = tStaffDao.getCount(condition);
+        List<TStaff> data = tStaffDao.pageByCondition((page-1)*limit, limit, condition);
+        LayPage<TStaff> layPage = new LayPage<TStaff>(count, data);
+        return layPage;
+    }
+
+    @Override
+    public boolean batchDelete(List ids) {
+        int rows = tStaffDao.invalidByIds(ids);
+        return rows > 0;
     }
 }

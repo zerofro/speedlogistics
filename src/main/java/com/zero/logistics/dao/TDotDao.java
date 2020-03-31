@@ -73,4 +73,6 @@ public interface TDotDao {
      * @return 受影响的行数
      */
     public int batchDelete(@Param("dotIds") List<Integer> dotIds);
+
+    public int invalidById(Integer dotId);
 }

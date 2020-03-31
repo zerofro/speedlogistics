@@ -35,7 +35,7 @@
         },
         {
           "title": "员工管理",
-          "href": "customerTable",
+          "href": "staffTable",
           "icon": "fa fa-file-text",
           "target": "_self"
         },

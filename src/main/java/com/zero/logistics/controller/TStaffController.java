@@ -1,10 +1,14 @@
 package com.zero.logistics.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zero.logistics.entity.TStaff;
 import com.zero.logistics.service.TStaffService;
-import org.springframework.web.bind.annotation.*;
+import com.zero.logistics.utils.LayPage;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 
 /**
  * (TStaff)表控制层
@@ -14,7 +18,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("tStaff")
-public class TStaffController {
+public class TStaffController implements BaseController<TStaff> {
     /**
      * 服务对象
      */
@@ -22,14 +26,44 @@ public class TStaffController {
     private TStaffService tStaffService;
 
     /**
-     * 通过主键查询单条数据
-     *
-     * @param id 主键
-     * @return 单条数据
+     * 获取页内容
+     * @param page
+     * @param limit
+     * @param searchParams
+     * @return
      */
-    @GetMapping("selectOne")
-    public TStaff selectOne(Integer id) {
-        return this.tStaffService.queryById(id);
+    @Override
+    public LayPage<TStaff> getPage(Integer page, Integer limit, String searchParams) {
+        TStaff tStaff = JSONObject.parseObject(searchParams, TStaff.class);
+        LayPage layPage = tStaffService.getPage(page, limit, tStaff);
+        return layPage;
     }
 
+    @Override
+    public boolean save(TStaff obj) {
+        try {
+            if (null != obj){
+                if (null == obj.getStaffId())
+                    tStaffService.insert(obj);
+                else
+                    tStaffService.update(obj);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean delete(Integer id) {
+        boolean flag = tStaffService.deleteById(id);
+        return flag;
+    }
+
+    @Override
+    public boolean batchDelete(Integer[] ids) {
+        boolean flag = tStaffService.batchDelete(Arrays.asList(ids));
+        return flag;
+    }
 }

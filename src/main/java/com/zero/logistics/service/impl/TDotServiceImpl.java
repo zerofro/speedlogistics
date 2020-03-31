@@ -68,14 +68,14 @@ public class TDotServiceImpl implements TDotService {
     }
 
     /**
-     * 通过主键删除数据
+     * 通过主键无效数据
      *
      * @param dotId 主键
      * @return 是否成功
      */
     @Override
     public boolean deleteById(Integer dotId) {
-        return this.tDotDao.deleteById(dotId) > 0;
+        return this.tDotDao.invalidById(dotId) > 0;
     }
 
     @Override
