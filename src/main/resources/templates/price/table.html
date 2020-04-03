@@ -1,0 +1,195 @@
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item" id="area-picker">
+                        <div class="layui-form-label">省份</div>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <select name="province" class="province-selector" data-value="广东省" lay-filter="province-1">
+                                <option value="">请选择省</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加定价 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除定价 </button>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+        </script>
+    </div>
+</div>
+
+<script>
+    //配置插件目录
+    layui.use(['form', 'table','miniPage','layarea'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+            miniPage = layui.miniPage,
+            layarea = layui.layarea;
+
+        table.render({
+            elem: '#currentTableId',
+            url: '/tPrice/getPage',
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            cols: [
+                [
+                {type: "checkbox", width: 50, fixed: "left"},
+                {field: 'priceId', width: 80, title: 'ID', sort: true},
+                {field: 'province', width: 150, title: '省份'},
+                {field: 'infirstPriority', minWidth: 150, title: '省内首重'},
+                {field: 'outFirstPriotity', minWidth: 150, title: '省外首重'},
+                {field: 'inContinued', minWidth: 150, title: '省内续重'},
+                {field: 'outContinued', minWidth: 150, title: '省外续重'},
+                {title: '操作', width: 150, templet: '#currentTableBar', fixed: "right", align: "center"}
+                ]
+            ],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 15,
+            page: true
+        });
+        layarea.render({
+            elem: '#area-picker',
+            change: function (res) {
+                console.log(res.province);
+                let province = res.province;
+                table.reload('currentTableId', {
+                    page: {
+                        curr: 1
+                    }
+                    , where: {
+                        'province': province
+                    }
+                }, 'data');
+            }
+        });
+
+        /**
+         * toolbar事件监听
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'add') {   // 监听添加操作
+                var content = miniPage.getHrefContent('priceEdit');
+                var openWH = miniPage.getOpenWidthHeight();
+
+                var index = layer.open({
+                    title: '添加定价',
+                    type: 1,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: [openWH[0] + 'px', openWH[1] + 'px'],
+                    offset: [openWH[2] + 'px', openWH[3] + 'px'],
+                    content: content
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('currentTableId')
+                    , data = checkStatus.data;
+                if (null != data && data.length > 0){
+                    layer.confirm("确定要删除吗？",function (index) {
+                        var ids = new Array();
+                        $.each(data,function (i,item) {
+                            ids.push(item.priceId);
+                        });
+                        $.ajax({
+                            type: 'POST',
+                            url: "tPrice/batchDelete",
+                            data: {
+                                'ids': ids
+                            },
+                            dataType: 'json',
+                            async: false,
+                            cache: false,
+                            traditional:true,//这个参数必须添加，采用传统方式转换
+                            success: function (res) {
+                                console.log(res);
+                                layer.alert("删除成功");
+                                table.reload('currentTableId',{});
+                            },
+                            error:function (res) {
+                                console.log(res);
+                                layer.alert("删除失败！！！");
+                            }
+                        });
+                        layer.close(index);
+                    })
+                }
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        /**
+         * 编辑与删除监听事件
+         */
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                var content = miniPage.getHrefContent('priceEdit');
+                var openWH = miniPage.getOpenWidthHeight();
+
+                var index = layer.open({
+                    title: '编辑定价',
+                    type: 1,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: [openWH[0] + 'px', openWH[1] + 'px'],
+                    offset: [openWH[2] + 'px', openWH[3] + 'px'],
+                    content: content,
+                    success: function (layero, index) {
+                        $("select[name='province']").val(data.province);
+                        $("#edit-form input[name='priceId']").val(data.priceId);
+                        $("#edit-form input[name='infirstPriority']").val(data.infirstPriority);
+                        $("#edit-form input[name='outFirstPriotity']").val(data.outFirstPriotity);
+                        $("#edit-form input[name='inContinued']").val(data.inContinued);
+                        $("#edit-form input[name='outContinued']").val(data.outContinued);
+                    }
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('真的删除行么', function (index) {
+                    $.get({
+                        url: "tPrice/delete?id="+data.priceId,
+                        success: function (res) {
+                            if (res){
+                                obj.del();
+                            }else{
+                                layer.alert("删除失败！！！");
+                            }
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+    });
+</script>

@@ -1,0 +1,92 @@
+<div class="layuimini-main">
+    <form id="edit-form" class="layui-form layuimini-form">
+            <input type="hidden" name="priceId"/>
+            <div class="layui-form-item" id="area-picker1">
+                <div class="layui-form-label required">省份</div>
+                <div class="layui-input-inline" style="width: 200px;">
+                    <select name="province" class="province-selector" lay-verify="required" lay-reqtext="省内首重不能为空" data-value="广东省" lay-filter="province-1">
+                        <option value="">请选择省</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">省内首重</label>
+                <div class="layui-input-block">
+                    <input type="number" name="infirstPriority" lay-verify="required" lay-reqtext="省内首重不能为空" placeholder="请输入省内首重" value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">省外首重</label>
+                <div class="layui-input-block">
+                    <input type="number" name="outFirstPriotity" lay-verify="required" lay-reqtext="省外首重不能为空" placeholder="请输入省外首重" value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">省内续重</label>
+                <div class="layui-input-block">
+                    <input type="number" name="inContinued" lay-verify="required" placeholder="请输入省内续重" value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">省外续重</label>
+                <div class="layui-input-block">
+                    <input type="number" name="outContinued" lay-verify="required"  placeholder="请输入省外续重" value="" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+    </form>
+</div>
+<script>
+    layui.use(['form', 'table','layarea'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            table = layui.table,
+            $ = layui.$,
+            layarea = layui.layarea;
+
+        /**
+         * 初始化表单，要加上，不然刷新部分组件可能会不加载
+         */
+        form.render();
+        layarea.render({
+            elem: '#area-picker1'
+        });
+
+        // 当前弹出层，防止ID被覆盖
+        var parentIndex = layer.index;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            console.log('提交事件监听');
+            const jsonData = data.field;
+            // console.log(jsonData);
+            $.ajax({
+                type: 'POST',
+                url: "tPrice/save",
+                data: jsonData,
+                dataType: 'json',
+                async: false,
+                cache: false,
+                success: function (res) {
+                    console.log(res);
+                    if (1 == res) {
+                        layer.close(parentIndex);
+                        table.reload('currentTableId', {});
+                    } else if (-1 == res){
+                        layer.alert("该省份定价已存在！");
+                    } else{
+                        layer.alert("保存失败！");
+                    }
+                }
+            });
+
+            return false;
+        });
+
+    });
+</script>

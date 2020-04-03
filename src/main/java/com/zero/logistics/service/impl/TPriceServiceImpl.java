@@ -1,9 +1,9 @@
 package com.zero.logistics.service.impl;
 
-import com.zero.logistics.entity.TPrice;
 import com.zero.logistics.dao.TPriceDao;
+import com.zero.logistics.entity.TPrice;
 import com.zero.logistics.service.TPriceService;
-import com.zero.logistics.utils.Page;
+import com.zero.logistics.utils.LayPage;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -79,10 +79,22 @@ public class TPriceServiceImpl implements TPriceService {
     }
 
     @Override
-    public Page<TPrice> getPage(int pageNum, int pageSize, String condition) {
+    public LayPage<TPrice> getPage(int page, int limit, TPrice condition) {
         int count = tPriceDao.getCount(condition);
-        List<TPrice> list = tPriceDao.pageByCondition((pageNum - 1) * pageSize, pageSize, condition);
-        Page<TPrice> page = new Page<>(pageNum, pageSize, count, list);
-        return page;
+        List<TPrice> data = tPriceDao.pageByCondition((page - 1) * limit, limit, condition);
+        LayPage<TPrice> layPage = new LayPage<>(count, data);
+        return layPage;
+    }
+
+    @Override
+    public boolean batchDelete(List ids) {
+        int rows = tPriceDao.invalidByIds(ids);
+        return rows > 0;
+    }
+
+    @Override
+    public TPrice queryByProvince(String province) {
+        TPrice tPrice = tPriceDao.queryByProvince(province);
+        return tPrice;
     }
 }

@@ -75,7 +75,8 @@ public interface BaseDao<T> {
      * @param condition 条件
      * @return 页数据列表
      */
-    public List<T> pageByCondition(int startRow, int pageSize, T condition);
+    public List<T> pageByCondition(@Param("startRow") int startRow, @Param("pageSize") int pageSize,
+                                   @Param("condition") T condition);
 
     /**
      * 批量无效数据

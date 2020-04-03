@@ -6,10 +6,10 @@ import java.io.Serializable;
  * (TPrice)实体类
  *
  * @author makejava
- * @since 2020-03-24 20:55:05
+ * @since 2020-03-31 21:17:53
  */
 public class TPrice implements Serializable {
-    private static final long serialVersionUID = 534367888696957522L;
+    private static final long serialVersionUID = 577277107734945476L;
     /**
     * 地区定价编号
     */

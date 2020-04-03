@@ -89,19 +89,31 @@
     </delete>
 
     <!--获取总记录数-->
-    <select id="getCount" parameterType="string" resultType="int">
+    <select id="getCount" resultType="int">
         SELECT COUNT(1) FROM `t_price`
-        <if test="condition != null and condition != ''">
-            WHERE `province` LIKE CONCAT(#{condition},'%')
-        </if>
     </select>
 
     <!--根据条件查询页内容-->
     <select id="pageByCondition" resultMap="TPriceMap">
-        SELECT * FROM `t_dot`
-        <if test="condition != null and condition != ''">
-            WHERE `dot_name` LIKE CONCAT(#{condition},'%')
-        </if>
+        SELECT * FROM `t_price`
         LIMIT #{startRow}, #{pageSize}
+    </select>
+
+    <!--批量删除-->
+    <delete id="invalidByIds">
+        DELETE FROM `t_price`
+        <where>
+            `price_id` IN
+            <foreach collection="ids" item="item"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </delete>
+
+    <!--根据省份获取数据-->
+    <select id="queryByProvince" parameterType="string" resultMap="TPriceMap">
+        SELECT * FROM `t_price`
+        WHERE `province` = #{province}
     </select>
 </mapper>

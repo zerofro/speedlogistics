@@ -18,7 +18,7 @@ import java.util.Arrays;
  */
 @RestController
 @RequestMapping("tStaff")
-public class TStaffController implements BaseController<TStaff> {
+public class TStaffController {
     /**
      * 服务对象
      */
@@ -32,14 +32,14 @@ public class TStaffController implements BaseController<TStaff> {
      * @param searchParams
      * @return
      */
-    @Override
+    @RequestMapping("getPage")
     public LayPage<TStaff> getPage(Integer page, Integer limit, String searchParams) {
         TStaff tStaff = JSONObject.parseObject(searchParams, TStaff.class);
         LayPage layPage = tStaffService.getPage(page, limit, tStaff);
         return layPage;
     }
 
-    @Override
+    @RequestMapping("save")
     public boolean save(TStaff obj) {
         try {
             if (null != obj){
@@ -55,13 +55,13 @@ public class TStaffController implements BaseController<TStaff> {
         return true;
     }
 
-    @Override
+    @RequestMapping("delete")
     public boolean delete(Integer id) {
         boolean flag = tStaffService.deleteById(id);
         return flag;
     }
 
-    @Override
+    @RequestMapping("batchDelete")
     public boolean batchDelete(Integer[] ids) {
         boolean flag = tStaffService.batchDelete(Arrays.asList(ids));
         return flag;
