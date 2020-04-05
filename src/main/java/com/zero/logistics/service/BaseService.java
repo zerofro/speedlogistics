@@ -1,6 +1,6 @@
 package com.zero.logistics.service;
 
-import com.zero.logistics.utils.LayPage;
+import com.zero.logistics.util.LayPage;
 
 import java.util.List;
 

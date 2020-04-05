@@ -66,7 +66,7 @@ public interface BaseDao<T> {
      * @param condition 条件
      * @return 总记录数
      */
-    public int getCount(T condition);
+    public int getCount(Object condition);
 
     /**
      * 根据条件获取页内容
@@ -76,7 +76,7 @@ public interface BaseDao<T> {
      * @return 页数据列表
      */
     public List<T> pageByCondition(@Param("startRow") int startRow, @Param("pageSize") int pageSize,
-                                   @Param("condition") T condition);
+                                   @Param("condition") Object condition);
 
     /**
      * 批量无效数据

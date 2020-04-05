@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.logistics.dao.TOrderDao">
+
+    <resultMap type="com.zero.logistics.entity.TOrder" id="TOrderMap">
+        <result property="orderId" column="order_id" jdbcType="VARCHAR"/>
+        <result property="customerId" column="customer_id" jdbcType="INTEGER"/>
+        <result property="dotId" column="dot_id" jdbcType="INTEGER"/>
+        <result property="senderAddressId" column="sender_address_id" jdbcType="INTEGER"/>
+        <result property="receiveAddressId" column="receive_address_id" jdbcType="INTEGER"/>
+        <result property="resSortId" column="res_sort_id" jdbcType="INTEGER"/>
+        <result property="weight" column="weight" jdbcType="INTEGER"/>
+        <result property="insuredPrice" column="insured_price" jdbcType="INTEGER"/>
+        <result property="freight" column="freight" jdbcType="NUMERIC"/>
+        <result property="remarks" column="remarks" jdbcType="VARCHAR"/>
+        <result property="orderTime" column="order_time" jdbcType="TIMESTAMP"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="detailMap" type="com.zero.logistics.vo.OrderDetailVO">
+        <result property="wxName" column="wx_name"/>
+        <result property="realName" column="real_name"/>
+        <result property="dotName" column="dot_name"/>
+        <result property="senderName" column="sender_name"/>
+        <result property="senderPhone" column="sender_phone"/>
+        <result property="senderAddress" column="sender_address"/>
+        <result property="receiveName" column="receive_name"/>
+        <result property="receivePhone" column="receive_phone"/>
+        <result property="receiveAddress" column="receive_address"/>
+        <result property="resSort" column="res_sort"/>
+        <result property="weight" column="weight"/>
+        <result property="insuredPrice" column="insured_price"/>
+        <result property="freight" column="freight"/>
+        <result property="remarks" column="remarks"/>
+        <result property="orderTime" column="order_time"/>
+        <result property="state" column="state"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TOrderMap">
+        select
+          order_id, customer_id, dot_id, sender_address_id, receive_address_id, res_sort_id, weight, insured_price, freight, remarks, order_time, state
+        from speedlogisticsdb.t_order
+        where order_id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TOrderMap">
+        select
+          order_id, customer_id, dot_id, sender_address_id, receive_address_id, res_sort_id, weight, insured_price, freight, remarks, order_time, state
+        from speedlogisticsdb.t_order
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TOrderMap">
+        select
+          order_id, customer_id, dot_id, sender_address_id, receive_address_id, res_sort_id, weight, insured_price, freight, remarks, order_time, state
+        from speedlogisticsdb.t_order
+        <where>
+            <if test="orderId != null and orderId != ''">
+                and order_id = #{orderId}
+            </if>
+            <if test="customerId != null">
+                and customer_id = #{customerId}
+            </if>
+            <if test="dotId != null">
+                and dot_id = #{dotId}
+            </if>
+            <if test="senderAddressId != null">
+                and sender_address_id = #{senderAddressId}
+            </if>
+            <if test="receiveAddressId != null">
+                and receive_address_id = #{receiveAddressId}
+            </if>
+            <if test="resSortId != null">
+                and res_sort_id = #{resSortId}
+            </if>
+            <if test="weight != null">
+                and weight = #{weight}
+            </if>
+            <if test="insuredPrice != null">
+                and insured_price = #{insuredPrice}
+            </if>
+            <if test="freight != null">
+                and freight = #{freight}
+            </if>
+            <if test="remarks != null and remarks != ''">
+                and remarks = #{remarks}
+            </if>
+            <if test="orderTime != null">
+                and order_time = #{orderTime}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="orderId" useGeneratedKeys="true">
+        insert into speedlogisticsdb.t_order(customer_id, dot_id, sender_address_id, receive_address_id, res_sort_id, weight, insured_price, freight, remarks, order_time, state)
+        values (#{customerId}, #{dotId}, #{senderAddressId}, #{receiveAddressId}, #{resSortId}, #{weight}, #{insuredPrice}, #{freight}, #{remarks}, #{orderTime}, #{state})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update speedlogisticsdb.t_order
+        <set>
+            <if test="customerId != null">
+                customer_id = #{customerId},
+            </if>
+            <if test="dotId != null">
+                dot_id = #{dotId},
+            </if>
+            <if test="senderAddressId != null">
+                sender_address_id = #{senderAddressId},
+            </if>
+            <if test="receiveAddressId != null">
+                receive_address_id = #{receiveAddressId},
+            </if>
+            <if test="resSortId != null">
+                res_sort_id = #{resSortId},
+            </if>
+            <if test="weight != null">
+                weight = #{weight},
+            </if>
+            <if test="insuredPrice != null">
+                insured_price = #{insuredPrice},
+            </if>
+            <if test="freight != null">
+                freight = #{freight},
+            </if>
+            <if test="remarks != null and remarks != ''">
+                remarks = #{remarks},
+            </if>
+            <if test="orderTime != null">
+                order_time = #{orderTime},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+        </set>
+        where order_id = #{orderId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from speedlogisticsdb.t_order where order_id = #{id}
+    </delete>
+
+    <!--获取总记录数-->
+    <select id="getCount" resultType="int">
+        SELECT count(1) FROM `t_order` o,`t_customer` c,`t_dot` d
+        WHERE o.`customer_id` = c.`customer_id`
+        AND o.`dot_id` = d.`dot_id`
+        <if test="dotId != null and dotId != ''">
+            AND d.`dot_id` = #{dotId}
+        </if>
+        <if test="wxName != null and wxName != ''">
+            AND c.`wx_name` LIKE CONCAT(#{wxName},'%')
+        </if>
+        <if test="realName != null and realName != ''">
+            AND c.`real_name` LIKE CONCAT(#{realName},'%')
+        </if>
+        <if test="state != null and state != ''">
+            AND o.`state` = #{state}
+        </if>
+    </select>
+
+    <!--根据条件查询页内容-->
+    <select id="pageByOrderVo" resultType="com.zero.logistics.vo.OrderTableVO">
+        SELECT o.`order_id` orderId,c.`wx_name` wxName,c.`real_name` realName,
+        d.`dot_name` dotName,o.`order_time` orderName,o.`state`
+        FROM `t_order` o,`t_customer` c,`t_dot` d
+        WHERE o.`customer_id` = c.`customer_id`
+        AND o.`dot_id` = d.`dot_id`
+        <if test="condition != null">
+            <if test="condition.dotId != null and condition.dotId != ''">
+                AND d.`dot_id` = #{condition.dotId}
+            </if>
+            <if test="condition.wxName != null and condition.wxName != ''">
+                AND c.`wx_name` LIKE CONCAT(#{condition.wxName},'%')
+            </if>
+            <if test="condition.realName != null and condition.realName != ''">
+                AND c.`real_name` LIKE CONCAT(#{condition.realName},'%')
+            </if>
+            <if test="condition.state != null and condition.state != ''">
+                AND o.`state` = #{condition.state}
+            </if>
+        </if>
+        LIMIT #{startRow}, #{pageSize}
+    </select>
+
+    <!--获取详情-->
+    <select id="getDetail" resultMap="detailMap">
+        SELECT c.`wx_name`,c.`real_name`,d.`dot_name`,
+            MAX(CASE a.`type` WHEN '0' THEN a.`owner_name` ELSE NULL END) sender_name,
+            MAX(CASE a.`type` WHEN '0' THEN a.`phone` ELSE NULL END) sender_phone,
+            MAX(CASE a.`type` WHEN '0' THEN CONCAT(a.`address_city`,a.`address`) ELSE NULL END) sender_address,
+            MAX(CASE a.`type` WHEN '1' THEN a.`owner_name` ELSE NULL END) receive_name,
+            MAX(CASE a.`type` WHEN '1' THEN a.`phone` ELSE NULL END) receive_phone,
+            MAX(CASE a.`type` WHEN '1' THEN CONCAT(a.`address_city`,a.`address`) ELSE NULL END) receive_address,
+            r.`res_sort`,o.`weight`,o.`insured_price`,o.`freight`,o.`remarks`,o.`order_time`,o.`state`
+        FROM `t_order` o,`t_customer` c,`t_dot` d,`t_address` a,`t_res_sort` r
+        WHERE o.`customer_id` = c.`customer_id` AND o.`dot_id` = d.`dot_id` AND o.`res_sort_id` = r.`res_sort_id`
+        AND (o.`sender_address_id` = a.`address_id` OR o.`receive_address_id` = a.`address_id`)
+        AND o.`order_id` = #{orderId}
+        GROUP BY o.`order_id`
+    </select>
+
+</mapper>

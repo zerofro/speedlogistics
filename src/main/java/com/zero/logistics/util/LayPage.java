@@ -1,4 +1,4 @@
-package com.zero.logistics.utils;
+package com.zero.logistics.util;
 
 import java.util.List;
 

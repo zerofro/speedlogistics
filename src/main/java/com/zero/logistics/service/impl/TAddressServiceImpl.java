@@ -3,7 +3,7 @@ package com.zero.logistics.service.impl;
 import com.zero.logistics.dao.TAddressDao;
 import com.zero.logistics.entity.TAddress;
 import com.zero.logistics.service.TAddressService;
-import com.zero.logistics.utils.LayPage;
+import com.zero.logistics.util.LayPage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

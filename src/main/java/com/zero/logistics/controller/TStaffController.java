@@ -3,7 +3,7 @@ package com.zero.logistics.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.zero.logistics.entity.TStaff;
 import com.zero.logistics.service.TStaffService;
-import com.zero.logistics.utils.LayPage;
+import com.zero.logistics.util.LayPage;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

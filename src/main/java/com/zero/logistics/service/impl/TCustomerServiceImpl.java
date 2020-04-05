@@ -3,7 +3,7 @@ package com.zero.logistics.service.impl;
 import com.zero.logistics.dao.TCustomerDao;
 import com.zero.logistics.entity.TCustomer;
 import com.zero.logistics.service.TCustomerService;
-import com.zero.logistics.utils.LayPage;
+import com.zero.logistics.util.LayPage;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
