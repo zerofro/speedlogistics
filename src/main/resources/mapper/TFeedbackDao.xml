@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.logistics.dao.TFeedbackDao">
+
+    <resultMap type="com.zero.logistics.entity.TFeedback" id="TFeedbackMap">
+        <result property="feedbackId" column="feedback_id" jdbcType="INTEGER"/>
+        <result property="customerId" column="customer_id" jdbcType="INTEGER"/>
+        <result property="feedbackContent" column="feedback_content" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="tableMap" type="com.zero.logistics.vo.FeedBackVO">
+        <result property="feedbackId" column="feedback_id"/>
+        <result property="wxName" column="wx_name"/>
+        <result property="realName" column="real_name"/>
+        <result property="feedbackContent" column="feedback_content"/>
+        <result property="email" column="email"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TFeedbackMap">
+        select
+          feedback_id, customer_id, feedback_content, email, create_time
+        from speedlogisticsdb.t_feedback
+        where feedback_id = #{feedbackId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TFeedbackMap">
+        select
+          feedback_id, customer_id, feedback_content, email, create_time
+        from speedlogisticsdb.t_feedback
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TFeedbackMap">
+        select
+          feedback_id, customer_id, feedback_content, email, create_time
+        from speedlogisticsdb.t_feedback
+        <where>
+            <if test="feedbackId != null">
+                and feedback_id = #{feedbackId}
+            </if>
+            <if test="customerId != null">
+                and customer_id = #{customerId}
+            </if>
+            <if test="feedbackContent != null and feedbackContent != ''">
+                and feedback_content = #{feedbackContent}
+            </if>
+            <if test="email != null and email != ''">
+                and email = #{email}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="feedbackId" useGeneratedKeys="true">
+        insert into speedlogisticsdb.t_feedback(customer_id, feedback_content, email, create_time)
+        values (#{customerId}, #{feedbackContent}, #{email}, #{createTime})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update speedlogisticsdb.t_feedback
+        <set>
+            <if test="customerId != null">
+                customer_id = #{customerId},
+            </if>
+            <if test="feedbackContent != null and feedbackContent != ''">
+                feedback_content = #{feedbackContent},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+        </set>
+        where feedback_id = #{feedbackId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from speedlogisticsdb.t_feedback where feedback_id = #{feedbackId}
+    </delete>
+
+    <!--获取总记录数-->
+    <select id="getCount" resultType="int">
+        SELECT count(1)
+        FROM `t_feedback` f,`t_customer` c
+        WHERE f.`customer_id` = c.`customer_id`
+        <if test="wxName != null and wxName != ''">
+            AND c.`wx_name` LIKE CONCAT(#{wxName},'%')
+        </if>
+        <if test="realName != null and realName != ''">
+            AND c.`real_name` LIKE CONCAT(#{realName},'%')
+        </if>
+    </select>
+
+    <!--根据条件查询页内容-->
+    <select id="pageByVo" resultMap="tableMap">
+        SELECT f.*,c.`wx_name`,c.`real_name`
+        FROM `t_feedback` f,`t_customer` c
+        WHERE f.`customer_id` = c.`customer_id`
+        <if test="condition != null">
+            <if test="condition.wxName != null and condition.wxName != ''">
+                AND c.`wx_name` LIKE CONCAT(#{condition.wxName},'%')
+            </if>
+            <if test="condition.realName != null and condition.realName != ''">
+                AND c.`real_name` LIKE CONCAT(#{condition.realName},'%')
+            </if>
+        </if>
+        LIMIT #{startRow}, #{pageSize}
+    </select>
+</mapper>

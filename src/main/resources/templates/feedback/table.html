@@ -13,9 +13,9 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">联系人</label>
+                            <label class="layui-form-label">真实姓名</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="ownerName" autocomplete="off" class="layui-input">
+                                <input type="text" name="realName" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -40,7 +40,7 @@
 
         table.render({
             elem: '#currentTableId',
-            url: '/tAddress/getPage',
+            url: '/tFeedback/getPage',
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -49,13 +49,12 @@
             }],
             cols: [
                 [
-                {field: 'addressId', width: 80, title: 'ID', sort: true},
+                {field: 'feedbackId', minWidth: 100, title: 'ID', sort: true},
                 {field: 'wxName', minWidth: 180, title: '微信昵称'},
-                {field: 'ownerName', width: 200, title: '联系人'},
-                {field: 'addressCity', minWidth: 250, title: '城市'},
-                {field: 'address', minWidth: 200, title: '详细地址'},
-                {field: 'phone', title: '联系电话', width: 150},
-                {field: 'type', title: '类型', width: 100}
+                {field: 'realName', width: 200, title: '真实姓名'},
+                {field: 'email', minWidth: 200, title: '邮箱'},
+                {field: 'feedbackContent', width: 250, title: '反馈内容'},
+                {field: 'createTime', width: 180, title: '反馈时间',templet: '<div>{{layui.util.toDateString(d.createTime, "yyyy-MM-dd HH:mm:ss") }}</div>'}
                 ]
             ],
             limits: [10, 15, 20, 25, 50, 100],

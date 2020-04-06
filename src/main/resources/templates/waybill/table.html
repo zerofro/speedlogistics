@@ -1,0 +1,168 @@
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">微信名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="wxName" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">真实姓名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="realName" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">运单号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="waybillCode" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="detail">详情</a>
+        </script>
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'table','miniPage'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+            miniPage = layui.miniPage;
+
+        form.render();
+        table.render({
+            elem: '#currentTableId',
+            url: '/tWaybill/getPage',
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            cols: [
+                [
+                    {field: 'waybillId', miniWidth: 100, title: 'ID', sort: true},
+                    {field: 'waybillCode', miniWidth: 150, title: '运单号'},
+                    {field: 'wxName', miniWidth: 150, title: '客户微信名'},
+                    {field: 'realName', width: 150, title: '客户真实姓名'},
+                    {field: 'createTime', width: 200, title: '录入时间',templet: '<div>{{layui.util.toDateString(d.createTime, "yyyy-MM-dd HH:mm:ss") }}</div>'},
+                    {field: 'finishTime', width: 200, title: '完成时间',templet: '<div>{{d.finishTime!=null?layui.util.toDateString(d.finishTime, "yyyy-MM-dd HH:mm:ss"):"" }}</div>'},
+                    {title: '操作', width: 150, templet: '#currentTableBar', fixed: "right", align: "center"}
+                ]
+            ],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 15,
+            page: true
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+
+            //执行搜索重载
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    searchParams: result
+                }
+            }, 'data');
+
+            return false;
+        });
+
+        /**
+         * 详情监听事件
+         */
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            // console.log(data);
+            if (obj.event === 'detail') {
+                var content = miniPage.getHrefContent('waybillDetail');
+                var openWH = miniPage.getOpenWidthHeight();
+
+                var index = layer.open({
+                    title: '运单详情',
+                    type: 1,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: [openWH[0] + 'px', openWH[1] + 'px'],
+                    offset: [openWH[2] + 'px', openWH[3] + 'px'],
+                    content: content,
+                    success: function (layero, index) {
+                        $.getJSON("/tWaybill/getDetail?waybillId="+data.waybillId,function (res) {
+                            // console.log(res);
+                            $("#detail-form input[name='waybillCode']").val(res.waybillCode);
+                            $("#detail-form input[name='sendAddress']").val(res.sendAddress);
+                            $("#detail-form input[name='receiveAddress']").val(res.receiveAddress);
+                            $(".logisticsList").append("<li  style=\"margin:10px 100px;border-left: 1px solid grey;padding-left: 10px;\">\n" +
+                                "<span>您的包裹已被揽收</span><br/>\n" +
+                                "<span>"+layui.util.toDateString(res.createTime, "yyyy-MM-dd HH:mm:ss")+"</span>\n" +
+                                "</li>");
+                            $.each(res.logisticsVOs,function (i,item) {
+                                let introduction = "";
+                                if (item.logisticsType == 0){
+                                    introduction = "已离开 "+item.startDotName+"；发往 "+item.targetDotName;
+                                }else{
+                                    introduction = "已到达 "+item.targetDotName;
+                                }
+                                const content = "<li  style=\"margin:10px 100px;border-left: 1px solid grey;padding-left: 10px;\">\n" +
+                                    "<span>"+introduction+"</span><br/>\n" +
+                                    "<span>"+layui.util.toDateString(item.createTime, "yyyy-MM-dd HH:mm:ss")+"</span>\n" +
+                                    "</li>";
+                                $(".logisticsList").append(content);
+                            });
+                            if (res.sendVO != null){
+                                const sendVO = res.sendVO;
+                                //显示派送信息
+                                let introduction = sendVO.dotName+"派件员："+sendVO.staffName+" 电话："+sendVO.staffName+" 当前正在为您派件";
+                                const sendContent = "<li  style=\"margin:10px 100px;border-left: 1px solid grey;padding-left: 10px;\">\n" +
+                                    "<span>"+introduction+"</span><br/>\n" +
+                                    "<span>"+layui.util.toDateString(sendVO.sendTime, "yyyy-MM-dd HH:mm:ss")+"</span>\n" +
+                                    "</li>";
+                                $(".logisticsList").append(sendContent);
+                                //判断是否已处理
+                                if (sendVO.signState != null){
+                                    if (sendVO.signState == 0)
+                                        introduction = "您的快递已签收,签收人：本人已签收，如有问题请电联快递员："+sendVO.staffName+"【"+sendVO.staffPhone+"】";
+                                    else
+                                        introduction = "您的快递已拒签,签收人：本人已拒签，拒签原因："+sendVO.rejectReasons+" |如果有问题电联快递员："+sendVO.staffName+"【"+sendVO.staffPhone+"】";
+                                    const signContent = "<li  style=\"margin:10px 100px;border-left: 1px solid grey;padding-left: 10px;\">\n" +
+                                        "<span>"+introduction+"</span><br/>\n" +
+                                        "<span>"+layui.util.toDateString(sendVO.signTime, "yyyy-MM-dd HH:mm:ss")+"</span>\n" +
+                                        "</li>";
+                                    $(".logisticsList").append(signContent);
+                                }
+                            }
+                            form.render();
+                        });
+                    }
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            }
+        });
+
+    });
+</script>

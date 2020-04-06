@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.logistics.dao.TLogisticsDao">
+
+    <resultMap type="com.zero.logistics.entity.TLogistics" id="TLogisticsMap">
+        <result property="logisticsId" column="logistics_id" jdbcType="INTEGER"/>
+        <result property="waybillId" column="waybill_id" jdbcType="INTEGER"/>
+        <result property="staffId" column="staff_id" jdbcType="INTEGER"/>
+        <result property="startDotId" column="start_dot_id" jdbcType="INTEGER"/>
+        <result property="targetDotId" column="target_dot_id" jdbcType="INTEGER"/>
+        <result property="logisticsType" column="logistics_type" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TLogisticsMap">
+        select
+          logistics_id, waybill_id, staff_id, start_dot_id, target_dot_id, logistics_type, create_time
+        from speedlogisticsdb.t_logistics
+        where logistics_id = #{logisticsId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TLogisticsMap">
+        select
+          logistics_id, waybill_id, staff_id, start_dot_id, target_dot_id, logistics_type, create_time
+        from speedlogisticsdb.t_logistics
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TLogisticsMap">
+        select
+          logistics_id, waybill_id, staff_id, start_dot_id, target_dot_id, logistics_type, create_time
+        from speedlogisticsdb.t_logistics
+        <where>
+            <if test="logisticsId != null">
+                and logistics_id = #{logisticsId}
+            </if>
+            <if test="waybillId != null">
+                and waybill_id = #{waybillId}
+            </if>
+            <if test="staffId != null">
+                and staff_id = #{staffId}
+            </if>
+            <if test="startDotId != null">
+                and start_dot_id = #{startDotId}
+            </if>
+            <if test="targetDotId != null">
+                and target_dot_id = #{targetDotId}
+            </if>
+            <if test="logisticsType != null">
+                and logistics_type = #{logisticsType}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="logisticsId" useGeneratedKeys="true">
+        insert into speedlogisticsdb.t_logistics(waybill_id, staff_id, start_dot_id, target_dot_id, logistics_type, create_time)
+        values (#{waybillId}, #{staffId}, #{startDotId}, #{targetDotId}, #{logisticsType}, #{createTime})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update speedlogisticsdb.t_logistics
+        <set>
+            <if test="waybillId != null">
+                waybill_id = #{waybillId},
+            </if>
+            <if test="staffId != null">
+                staff_id = #{staffId},
+            </if>
+            <if test="startDotId != null">
+                start_dot_id = #{startDotId},
+            </if>
+            <if test="targetDotId != null">
+                target_dot_id = #{targetDotId},
+            </if>
+            <if test="logisticsType != null">
+                logistics_type = #{logisticsType},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+        </set>
+        where logistics_id = #{logisticsId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from speedlogisticsdb.t_logistics where logistics_id = #{logisticsId}
+    </delete>
+
+    <select id="getByWaybillId" parameterType="int" resultType="com.zero.logistics.vo.LogisticsVO">
+        SELECT MAX(CASE d.`dot_id` WHEN l.`start_dot_id` THEN d.`dot_name` ELSE NULL END) startDotName,
+            MAX(CASE d.`dot_id` WHEN l.`target_dot_id` THEN d.`dot_name` ELSE NULL END) targetDotName,
+            l.`logistics_type` logisticsType,l.`create_time` createTime
+        FROM `t_waybill` w,`t_logistics` l,`t_dot` d
+        WHERE l.`waybill_id` = w.`waybill_id` AND (l.`start_dot_id` = d.`dot_id`
+        OR l.`target_dot_id` = d.`dot_id`) AND w.`waybill_id` = #{waybillId}
+        GROUP BY l.`logistics_id`
+    </select>
+
+</mapper>

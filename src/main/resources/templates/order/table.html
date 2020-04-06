@@ -125,7 +125,7 @@
         });
 
         /**
-         * 编辑与删除监听事件
+         * 详情监听事件
          */
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
@@ -159,12 +159,11 @@
                             $("#detail-form input[name='insuredPrice']").val(res.insuredPrice);
                             $("#detail-form input[name='freight']").val(res.freight);
                             $("#detail-form textarea[name='remarks']").text(res.remarks==null?"":res.remarks);
-                            let orderDate = new Date(res.orderTime);
-                            const orderTime = orderDate.getFullYear()+"-"+(orderDate.getMonth() + 1)+"-"+
-                                        orderDate.getDate()+" "+orderDate.getHours()+":"+orderDate.getMinutes()+
-                                        ":"+orderDate.getSeconds();
-                            // console.log(orderTime);
-                            $("#detail-form input[name='orderTime']").val(orderTime);
+                            // let orderDate = new Date(res.orderTime);
+                            // const orderTime = orderDate.getFullYear()+"-"+(orderDate.getMonth() + 1)+"-"+
+                            //             orderDate.getDate()+" "+orderDate.getHours()+":"+orderDate.getMinutes()+
+                            //             ":"+orderDate.getSeconds();
+                            $("#detail-form input[name='orderTime']").val(layui.util.toDateString(res.orderTime,"yyyy-MM-dd HH:mm:ss"));
                             let state = "";
                             switch (res.state) {
                                 case 0: state = "待接单";break;

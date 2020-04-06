@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.logistics.dao.TSendDao">
+
+    <resultMap type="com.zero.logistics.entity.TSend" id="TSendMap">
+        <result property="sendId" column="send_id" jdbcType="INTEGER"/>
+        <result property="waybillId" column="waybill_id" jdbcType="INTEGER"/>
+        <result property="staffId" column="staff_id" jdbcType="INTEGER"/>
+        <result property="sendTime" column="send_time" jdbcType="TIMESTAMP"/>
+        <result property="signTime" column="sign_time" jdbcType="TIMESTAMP"/>
+        <result property="signState" column="sign_state" jdbcType="INTEGER"/>
+        <result property="rejectReasons" column="reject_reasons" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TSendMap">
+        select
+          send_id, waybill_id, staff_id, send_time, sign_time, sign_state, reject_reasons
+        from speedlogisticsdb.t_send
+        where send_id = #{sendId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TSendMap">
+        select
+          send_id, waybill_id, staff_id, send_time, sign_time, sign_state, reject_reasons
+        from speedlogisticsdb.t_send
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TSendMap">
+        select
+          send_id, waybill_id, staff_id, send_time, sign_time, sign_state, reject_reasons
+        from speedlogisticsdb.t_send
+        <where>
+            <if test="sendId != null">
+                and send_id = #{sendId}
+            </if>
+            <if test="waybillId != null">
+                and waybill_id = #{waybillId}
+            </if>
+            <if test="staffId != null">
+                and staff_id = #{staffId}
+            </if>
+            <if test="sendTime != null">
+                and send_time = #{sendTime}
+            </if>
+            <if test="signTime != null">
+                and sign_time = #{signTime}
+            </if>
+            <if test="signState != null">
+                and sign_state = #{signState}
+            </if>
+            <if test="rejectReasons != null and rejectReasons != ''">
+                and reject_reasons = #{rejectReasons}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="sendId" useGeneratedKeys="true">
+        insert into speedlogisticsdb.t_send(waybill_id, staff_id, send_time, sign_time, sign_state, reject_reasons)
+        values (#{waybillId}, #{staffId}, #{sendTime}, #{signTime}, #{signState}, #{rejectReasons})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update speedlogisticsdb.t_send
+        <set>
+            <if test="waybillId != null">
+                waybill_id = #{waybillId},
+            </if>
+            <if test="staffId != null">
+                staff_id = #{staffId},
+            </if>
+            <if test="sendTime != null">
+                send_time = #{sendTime},
+            </if>
+            <if test="signTime != null">
+                sign_time = #{signTime},
+            </if>
+            <if test="signState != null">
+                sign_state = #{signState},
+            </if>
+            <if test="rejectReasons != null and rejectReasons != ''">
+                reject_reasons = #{rejectReasons},
+            </if>
+        </set>
+        where send_id = #{sendId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from speedlogisticsdb.t_send where send_id = #{sendId}
+    </delete>
+
+    <select id="getByWaybillId" parameterType="int" resultType="com.zero.logistics.vo.SendVO">
+        SELECT d.`dot_name` dotName,st.`staff_name` staffName,st.`staff_phone`staffPhone,
+            se.`send_time` sendTime,se.`sign_time` signTime,
+            se.`sign_state` signState,se.`reject_reasons` rejectReasons
+        FROM `t_send` se,`t_waybill` w,`t_staff` st,`t_dot` d
+        WHERE se.`waybill_id` = w.`waybill_id` AND se.`staff_id` = st.`staff_id`
+        AND st.`dot_id` = d.`dot_id` AND w.`waybill_id` = #{waybillId}
+    </select>
+
+</mapper>
