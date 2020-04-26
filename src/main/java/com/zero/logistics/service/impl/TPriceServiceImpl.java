@@ -2,8 +2,11 @@ package com.zero.logistics.service.impl;
 
 import com.zero.logistics.dao.TAddressDao;
 import com.zero.logistics.dao.TPriceDao;
+import com.zero.logistics.dao.TResSortDao;
+import com.zero.logistics.entity.TAddress;
 import com.zero.logistics.entity.TOrder;
 import com.zero.logistics.entity.TPrice;
+import com.zero.logistics.entity.TResSort;
 import com.zero.logistics.service.TPriceService;
 import com.zero.logistics.util.LayPage;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,9 @@ public class TPriceServiceImpl implements TPriceService {
 
     @Resource
     private TAddressDao tAddressDao;
+
+    @Resource
+    private TResSortDao tResSortDao;
 
     /**
      * 通过ID查询单条数据
@@ -105,8 +111,26 @@ public class TPriceServiceImpl implements TPriceService {
 
     @Override
     public Double valuation(TOrder order) {
-        Integer senderAddressId = order.getSenderAddressId();
-        Integer receiveAddressId = order.getReceiveAddressId();
-        return null;
+        TAddress senderAddress = tAddressDao.queryById(order.getSenderAddressId());
+        TAddress receiveAddress = tAddressDao.queryById(order.getReceiveAddressId());
+        TPrice tPrice = tPriceDao.queryByProvince(senderAddress.getProvince());
+        //地址收费
+        double priceValuation = 0;
+        if (senderAddress.getProvince().equals(receiveAddress.getProvince())){
+            priceValuation += tPrice.getInfirstPriority();
+            if (null != order.getWeight() && order.getWeight() > 1)
+                priceValuation += (order.getWeight() - 1)*tPrice.getInContinued();
+        }else {
+            priceValuation += tPrice.getOutFirstPriotity();
+            if (null != order.getWeight() && order.getWeight() > 1)
+                priceValuation += (order.getWeight() - 1)*tPrice.getOutContinued();
+        }
+        //分类收费
+        if (null != order.getResSortId()){
+            TResSort tResSort = tResSortDao.queryById(order.getResSortId());
+            priceValuation += tResSort.getResSortMoney();
+        }
+        //保价服务收费
+        return priceValuation;
     }
 }

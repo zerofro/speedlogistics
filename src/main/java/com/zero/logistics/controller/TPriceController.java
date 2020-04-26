@@ -4,7 +4,7 @@ import com.zero.logistics.entity.TOrder;
 import com.zero.logistics.entity.TPrice;
 import com.zero.logistics.service.TPriceService;
 import com.zero.logistics.util.LayPage;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -77,8 +77,8 @@ public class TPriceController {
         return flag;
     }
 
-    @PostMapping("valuation")
-    public Double valuation(TOrder order){
+    @RequestMapping("valuation")
+    public Double valuation(@RequestBody TOrder order){
         return tPriceService.valuation(order);
     }
 }
