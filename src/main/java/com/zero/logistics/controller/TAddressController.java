@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.zero.logistics.entity.TAddress;
 import com.zero.logistics.service.TAddressService;
 import com.zero.logistics.util.LayPage;
+import com.zero.logistics.vo.AddressTableVO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -59,9 +60,9 @@ public class TAddressController {
 
     @RequestMapping("getPage")
     @ResponseBody
-    public LayPage<TAddress> getPage(Integer page, Integer limit, String searchParams){
+    public LayPage<AddressTableVO> getPage(Integer page, Integer limit, String searchParams){
         TAddress tAddress = JSONObject.parseObject(searchParams, TAddress.class);
-        LayPage<TAddress> layPage = tAddressService.getPage(page, limit, tAddress);
+        LayPage<AddressTableVO> layPage = tAddressService.getPage(page, limit, tAddress);
         return layPage;
     }
 

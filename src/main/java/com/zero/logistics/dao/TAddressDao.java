@@ -1,6 +1,7 @@
 package com.zero.logistics.dao;
 
 import com.zero.logistics.entity.TAddress;
+import com.zero.logistics.vo.AddressTableVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -80,6 +81,6 @@ public interface TAddressDao {
 
     public int getCount(TAddress tAddress);
 
-    public List<TAddress> pageByCondition(@Param("startRow") int startRow, @Param("pageSize") int pageSize,
-                                          @Param("condition") TAddress condition);
+    public List<AddressTableVO> pageByCondition(@Param("startRow") int startRow, @Param("pageSize") int pageSize,
+                                                @Param("condition") TAddress condition);
 }

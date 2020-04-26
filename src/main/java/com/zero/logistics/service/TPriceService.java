@@ -1,5 +1,6 @@
 package com.zero.logistics.service;
 
+import com.zero.logistics.entity.TOrder;
 import com.zero.logistics.entity.TPrice;
 
 /**
@@ -15,4 +16,11 @@ public interface TPriceService extends BaseService<TPrice> {
      * @return 定价信息
      */
     public TPrice queryByProvince(String province);
+
+    /**
+     * 估价
+     * @param order
+     * @return
+     */
+    public Double valuation(TOrder order);
 }

@@ -1,8 +1,10 @@
 package com.zero.logistics.controller;
 
+import com.zero.logistics.entity.TOrder;
 import com.zero.logistics.entity.TPrice;
 import com.zero.logistics.service.TPriceService;
 import com.zero.logistics.util.LayPage;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -73,5 +75,10 @@ public class TPriceController {
     public boolean batchDelete(Integer[] ids) {
         boolean flag = tPriceService.batchDelete(Arrays.asList(ids));
         return flag;
+    }
+
+    @PostMapping("valuation")
+    public Double valuation(TOrder order){
+        return tPriceService.valuation(order);
     }
 }

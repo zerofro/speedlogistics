@@ -2,6 +2,7 @@ package com.zero.logistics.service;
 
 import com.zero.logistics.entity.TAddress;
 import com.zero.logistics.util.LayPage;
+import com.zero.logistics.vo.AddressTableVO;
 
 import java.util.List;
 
@@ -63,5 +64,5 @@ public interface TAddressService {
      */
     public List<TAddress> getAddressBook(Integer type, Integer customerId, String ownerName);
 
-    public LayPage<TAddress> getPage(int page, int limit, TAddress tAddress);
+    public LayPage<AddressTableVO> getPage(int page, int limit, TAddress tAddress);
 }

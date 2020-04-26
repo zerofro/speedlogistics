@@ -6,29 +6,19 @@
         <result property="addressId" column="address_id" jdbcType="INTEGER"/>
         <result property="customerId" column="customer_id" jdbcType="INTEGER"/>
         <result property="ownerName" column="owner_name" jdbcType="VARCHAR"/>
-        <result property="addressCity" column="address_city" jdbcType="VARCHAR"/>
+        <result property="province" column="province" jdbcType="VARCHAR"/>
+        <result property="city" column="city" jdbcType="VARCHAR"/>
+        <result property="area" column="area" jdbcType="VARCHAR"/>
         <result property="address" column="address" jdbcType="VARCHAR"/>
         <result property="phone" column="phone" jdbcType="VARCHAR"/>
         <result property="type" column="type" jdbcType="INTEGER"/>
         <result property="state" column="state" jdbcType="INTEGER"/>
-    </resultMap>
-
-    <resultMap type="com.zero.logistics.entity.TAddress" id="andCustomerMap">
-        <result property="addressId" column="address_id" jdbcType="INTEGER"/>
-        <result property="customerId" column="customer_id" jdbcType="INTEGER"/>
-        <result property="ownerName" column="owner_name" jdbcType="VARCHAR"/>
-        <result property="addressCity" column="address_city" jdbcType="VARCHAR"/>
-        <result property="address" column="address" jdbcType="VARCHAR"/>
-        <result property="phone" column="phone" jdbcType="VARCHAR"/>
-        <result property="type" column="type" jdbcType="INTEGER"/>
-        <result property="state" column="state" jdbcType="INTEGER"/>
-        <result property="wxName" column="wx_name"/>
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="TAddressMap">
         select
-          address_id, customer_id, owner_name, address_city, address, phone, type, state
+          address_id, customer_id, owner_name, province, city, area, address, phone, type, state
         from speedlogisticsdb.t_address
         where address_id = #{addressId}
     </select>
@@ -36,7 +26,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="TAddressMap">
         select
-          address_id, customer_id, owner_name, address_city, address, phone, type, state
+          address_id, customer_id, owner_name, province, city, area, address, phone, type, state
         from speedlogisticsdb.t_address
         limit #{offset}, #{limit}
     </select>
@@ -44,7 +34,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TAddressMap">
         select
-          address_id, customer_id, owner_name, address_city, address, phone, type, state
+          address_id, customer_id, owner_name, province, city, area, address, phone, type, state
         from speedlogisticsdb.t_address
         <where>
             <if test="addressId != null">
@@ -56,8 +46,14 @@
             <if test="ownerName != null and ownerName != ''">
                 and owner_name = #{ownerName}
             </if>
-            <if test="addressCity != null and addressCity != ''">
-                and address_city = #{addressCity}
+            <if test="province != null and province != ''">
+                and province = #{province}
+            </if>
+            <if test="city != null and city != ''">
+                and city = #{city}
+            </if>
+            <if test="area != null and area != ''">
+                and area = #{area}
             </if>
             <if test="address != null and address != ''">
                 and address = #{address}
@@ -76,8 +72,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="addressId" useGeneratedKeys="true">
-        insert into speedlogisticsdb.t_address(customer_id, owner_name, address_city, address, phone, type, state)
-        values (#{customerId}, #{ownerName}, #{addressCity}, #{address}, #{phone}, #{type}, #{state})
+        insert into speedlogisticsdb.t_address(customer_id, owner_name, province, city, area, address, phone, type, state)
+        values (#{customerId}, #{ownerName}, #{province}, #{city}, #{area}, #{address}, #{phone}, #{type}, #{state})
     </insert>
 
     <!--通过主键修改数据-->
@@ -90,8 +86,14 @@
             <if test="ownerName != null and ownerName != ''">
                 owner_name = #{ownerName},
             </if>
-            <if test="addressCity != null and addressCity != ''">
-                address_city = #{addressCity},
+            <if test="province != null and province != ''">
+                province = #{province},
+            </if>
+            <if test="city != null and city != ''">
+                city = #{city},
+            </if>
+            <if test="area != null and area != ''">
+                area = #{area},
             </if>
             <if test="address != null and address != ''">
                 address = #{address},
@@ -140,8 +142,10 @@
     </select>
 
     <!--根据条件查询页内容-->
-    <select id="pageByCondition" resultMap="andCustomerMap">
-        SELECT c.`wx_name`,a.* FROM `t_customer` c,`t_address` a
+    <select id="pageByCondition" resultType="com.zero.logistics.vo.AddressTableVO">
+        SELECT c.`wx_name`,a.`address_id`,a.`owner_name`,a.`phone`,
+        IF(a.`type` = 0,'寄件','收件') `type`,a.`owner_name`,CONCAT(a.`province`,a.`city`,a.`area`,a.`address`) address
+        FROM `t_customer` c,`t_address` a
         WHERE c.`customer_id` = a.`customer_id` AND a.`state` = 1
         <if test="condition != null">
             <if test="condition.wxName != null and condition.wxName != ''">

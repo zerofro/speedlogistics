@@ -6,10 +6,10 @@ import java.io.Serializable;
  * (TAddress)实体类
  *
  * @author makejava
- * @since 2020-03-18 18:08:29
+ * @since 2020-04-26 11:46:22
  */
 public class TAddress implements Serializable {
-    private static final long serialVersionUID = -85012406727307687L;
+    private static final long serialVersionUID = 584118433213944169L;
     /**
     * 地址编号
     */
@@ -23,9 +23,17 @@ public class TAddress implements Serializable {
     */
     private String ownerName;
     /**
-    * 地址城市
+    * 省
     */
-    private String addressCity;
+    private String province;
+    /**
+    * 市
+    */
+    private String city;
+    /**
+    * 区
+    */
+    private String area;
     /**
     * 详细地址
     */
@@ -69,12 +77,28 @@ public class TAddress implements Serializable {
         this.ownerName = ownerName;
     }
 
-    public String getAddressCity() {
-        return addressCity;
+    public String getProvince() {
+        return province;
     }
 
-    public void setAddressCity(String addressCity) {
-        this.addressCity = addressCity;
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public String getAddress() {

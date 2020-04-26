@@ -1,6 +1,8 @@
 package com.zero.logistics.service.impl;
 
+import com.zero.logistics.dao.TAddressDao;
 import com.zero.logistics.dao.TPriceDao;
+import com.zero.logistics.entity.TOrder;
 import com.zero.logistics.entity.TPrice;
 import com.zero.logistics.service.TPriceService;
 import com.zero.logistics.util.LayPage;
@@ -19,6 +21,9 @@ import java.util.List;
 public class TPriceServiceImpl implements TPriceService {
     @Resource
     private TPriceDao tPriceDao;
+
+    @Resource
+    private TAddressDao tAddressDao;
 
     /**
      * 通过ID查询单条数据
@@ -96,5 +101,12 @@ public class TPriceServiceImpl implements TPriceService {
     public TPrice queryByProvince(String province) {
         TPrice tPrice = tPriceDao.queryByProvince(province);
         return tPrice;
+    }
+
+    @Override
+    public Double valuation(TOrder order) {
+        Integer senderAddressId = order.getSenderAddressId();
+        Integer receiveAddressId = order.getReceiveAddressId();
+        return null;
     }
 }
