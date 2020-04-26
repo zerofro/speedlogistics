@@ -99,8 +99,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="orderId" useGeneratedKeys="true">
-        insert into speedlogisticsdb.t_order(customer_id, dot_id, sender_address_id, receive_address_id, res_sort_id, weight, insured_price, freight, remarks, order_time, state)
-        values (#{customerId}, #{dotId}, #{senderAddressId}, #{receiveAddressId}, #{resSortId}, #{weight}, #{insuredPrice}, #{freight}, #{remarks}, #{orderTime}, #{state})
+        insert into speedlogisticsdb.t_order(customer_id, dot_id, sender_address_id, receive_address_id, res_sort_id, weight, insured_price, remarks, state)
+        values (#{customerId}, #{dotId}, #{senderAddressId}, #{receiveAddressId}, #{resSortId}, #{weight}, #{insuredPrice}, #{remarks}, 0)
     </insert>
 
     <!--通过主键修改数据-->

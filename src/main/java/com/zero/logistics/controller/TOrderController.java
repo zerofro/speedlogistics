@@ -7,6 +7,8 @@ import com.zero.logistics.service.TOrderService;
 import com.zero.logistics.util.LayPage;
 import com.zero.logistics.vo.OrderDetailVO;
 import com.zero.logistics.vo.OrderTableVO;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -75,5 +77,10 @@ public class TOrderController {
     public boolean batchDelete(Integer[] ids) {
         boolean flag = tOrderService.batchDelete(Arrays.asList(ids));
         return flag;
+    }
+
+    @PostMapping("commitOrder")
+    public boolean commitOrder(@RequestBody TOrder order){
+        return tOrderService.commitOrder(order);
     }
 }

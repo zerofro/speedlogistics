@@ -17,4 +17,6 @@ public interface TOrderService extends BaseService<TOrder> {
     public LayPage<OrderTableVO> getPage(int page, int limit, OrderTableDTO orderTableDTO);
 
     public OrderDetailVO getDetail(Integer orderId);
+
+    public boolean commitOrder(TOrder order);
 }

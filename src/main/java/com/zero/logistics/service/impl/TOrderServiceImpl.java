@@ -104,4 +104,15 @@ public class TOrderServiceImpl implements TOrderService {
         OrderDetailVO detail = tOrderDao.getDetail(orderId);
         return detail;
     }
+
+    /**
+     * 提交订单
+     * @param order
+     * @return
+     */
+    @Override
+    public boolean commitOrder(TOrder order) {
+        int rows = tOrderDao.insert(order);
+        return rows > 0;
+    }
 }
