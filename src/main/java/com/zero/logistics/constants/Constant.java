@@ -11,4 +11,5 @@ public interface Constant {
     public static final String APPID = "wx25d28cf38d2dafe6";
     public static final String SECRET = "50353e4d285ba779b65a226153123a16";
     public static final String CUSTOMER = "customer";
+    public static final String ADMIN = "admin";
 }
