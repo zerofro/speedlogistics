@@ -1,6 +1,7 @@
 package com.zero.logistics.service.impl;
 
 import com.zero.logistics.dao.TCustomerDao;
+import com.zero.logistics.dto.CustomerIdentityDTO;
 import com.zero.logistics.entity.TCustomer;
 import com.zero.logistics.service.TCustomerService;
 import com.zero.logistics.util.LayPage;
@@ -102,5 +103,27 @@ public class TCustomerServiceImpl implements TCustomerService {
     public boolean batchDelete(List<Integer> customerIdList) {
         int rows = tCustomerDao.batchDelete(customerIdList);
         return rows > 0;
+    }
+
+    /**
+     * 修改手机号码
+     * @param phone
+     * @param customerId
+     * @return
+     */
+    @Override
+    public boolean modifyPhone(String phone, int customerId) {
+        int rows = tCustomerDao.modifyPhone(phone, customerId);
+        return rows > 0;
+    }
+
+    /**
+     * 实名制的服务方法
+     * @param customerIdentityDTO
+     * @return
+     */
+    @Override
+    public boolean realIdentity(CustomerIdentityDTO customerIdentityDTO) {
+        return tCustomerDao.identityReal(customerIdentityDTO) > 0;
     }
 }

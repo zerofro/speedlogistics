@@ -162,4 +162,14 @@
         UPDATE `t_customer` SET `state` = 0
         where `customer_id` = #{customerId}
     </update>
+
+    <!--修改手机号码-->
+    <update id="modifyPhone">
+        UPDATE `t_customer` SET `customer_phone` = #{phone} WHERE `customer_id` = #{customerId}
+    </update>
+
+    <!--实名制-->
+    <update id="identityReal">
+        UPDATE `t_customer` SET `real_name` = #{realName},`real_num` = #{realNum} WHERE `customer_id` = #{customerId}
+    </update>
 </mapper>

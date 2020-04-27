@@ -2,13 +2,13 @@ package com.zero.logistics.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zero.logistics.constants.Constant;
+import com.zero.logistics.dto.CustomerIdentityDTO;
 import com.zero.logistics.entity.TCustomer;
 import com.zero.logistics.service.TCustomerService;
 import com.zero.logistics.util.HttpRequestUtil;
 import com.zero.logistics.util.LayPage;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -102,5 +102,31 @@ public class TCustomerController {
         List<Integer> customerIdList = Arrays.asList(customerIds);
         boolean flag = tCustomerService.batchDelete(customerIdList);
         return flag;
+    }
+
+    @PostMapping("bindPhone")
+    @ResponseBody
+    public boolean bindPhone(@RequestBody String phone, HttpSession session){
+        TCustomer customer = (TCustomer) session.getAttribute(Constant.CUSTOMER);
+        if (tCustomerService.modifyPhone(phone, customer.getCustomerId())){
+            customer.setCustomerPhone(phone);
+            session.setAttribute(Constant.CUSTOMER, customer);
+            return true;
+        }
+        return false;
+    }
+
+    @PostMapping("realIdentity")
+    @ResponseBody
+    public boolean realIdentity(@RequestBody CustomerIdentityDTO customerIdentityDTO, HttpSession session){
+        TCustomer customer = (TCustomer) session.getAttribute(Constant.CUSTOMER);
+        customerIdentityDTO.setCustomerId(customer.getCustomerId());
+        if (tCustomerService.realIdentity(customerIdentityDTO)){
+            customer.setRealName(customerIdentityDTO.getRealName());
+            customer.setRealNum(customerIdentityDTO.getRealNum());
+            session.setAttribute(Constant.CUSTOMER, customer);
+            return true;
+        }
+        return false;
     }
 }

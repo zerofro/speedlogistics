@@ -1,5 +1,6 @@
 package com.zero.logistics.service;
 
+import com.zero.logistics.dto.CustomerIdentityDTO;
 import com.zero.logistics.entity.TCustomer;
 import com.zero.logistics.util.LayPage;
 
@@ -66,4 +67,8 @@ public interface TCustomerService {
     public LayPage<TCustomer> getPage(int page, int limit, TCustomer condition);
 
     public boolean batchDelete(List<Integer> customerIdList);
+
+    public boolean modifyPhone(String phone, int customerId);
+
+    public boolean realIdentity(CustomerIdentityDTO customerIdentityDTO);
 }

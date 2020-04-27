@@ -123,6 +123,7 @@
         <if test="ownerName != null and ownerName != ''">
             AND `owner_name` LIKE CONCAT(#{ownerName}, '%')
         </if>
+        ORDER BY `state`
     </select>
 
     <!--更新默认地址-->

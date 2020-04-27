@@ -1,5 +1,6 @@
 package com.zero.logistics.dao;
 
+import com.zero.logistics.dto.CustomerIdentityDTO;
 import com.zero.logistics.entity.TCustomer;
 import org.apache.ibatis.annotations.Param;
 
@@ -75,4 +76,8 @@ public interface TCustomerDao {
     public int batchDelete(@Param("customerIdList") List<Integer> customerIdList);
 
     public int removeById(Integer customerId);
+
+    public int modifyPhone(@Param("phone") String phone, @Param("customerId") int customerId);
+
+    public int identityReal(CustomerIdentityDTO customerIdentityDTO);
 }
