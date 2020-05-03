@@ -1,5 +1,6 @@
 package com.zero.logistics.service.impl;
 
+import com.zero.logistics.dto.StaffLoginDTO;
 import com.zero.logistics.entity.TStaff;
 import com.zero.logistics.dao.TStaffDao;
 import com.zero.logistics.service.TStaffService;
@@ -91,5 +92,15 @@ public class TStaffServiceImpl implements TStaffService {
     public boolean batchDelete(List ids) {
         int rows = tStaffDao.invalidByIds(ids);
         return rows > 0;
+    }
+
+    @Override
+    public TStaff queryByWxId(String wxId) {
+        return tStaffDao.queryByWxId(wxId);
+    }
+
+    @Override
+    public TStaff queryByPwd(StaffLoginDTO staffLoginDTO) {
+        return tStaffDao.queryByPwd(staffLoginDTO);
     }
 }

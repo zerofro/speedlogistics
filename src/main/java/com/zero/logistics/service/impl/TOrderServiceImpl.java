@@ -1,12 +1,13 @@
 package com.zero.logistics.service.impl;
 
+import com.zero.logistics.dao.TOrderDao;
 import com.zero.logistics.dto.OrderTableDTO;
 import com.zero.logistics.entity.TOrder;
-import com.zero.logistics.dao.TOrderDao;
 import com.zero.logistics.service.TOrderService;
 import com.zero.logistics.util.LayPage;
 import com.zero.logistics.vo.OrderDetailVO;
 import com.zero.logistics.vo.OrderTableVO;
+import com.zero.logistics.vo.OrdersVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -114,5 +115,20 @@ public class TOrderServiceImpl implements TOrderService {
     public boolean commitOrder(TOrder order) {
         int rows = tOrderDao.insert(order);
         return rows > 0;
+    }
+
+    @Override
+    public List<TOrder> list(int customerId, int state) {
+        return tOrderDao.list(customerId,state);
+    }
+
+    @Override
+    public boolean cancel(int orderId) {
+        return tOrderDao.updateState(orderId, 4) > 0;
+    }
+
+    @Override
+    public List<OrdersVO> listByDotId(int dotId) {
+        return tOrderDao.listByDotId(dotId);
     }
 }

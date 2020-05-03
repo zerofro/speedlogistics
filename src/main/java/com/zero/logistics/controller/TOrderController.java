@@ -1,19 +1,21 @@
 package com.zero.logistics.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zero.logistics.constants.Constant;
 import com.zero.logistics.dto.OrderTableDTO;
+import com.zero.logistics.entity.TCustomer;
 import com.zero.logistics.entity.TOrder;
 import com.zero.logistics.service.TOrderService;
 import com.zero.logistics.util.LayPage;
 import com.zero.logistics.vo.OrderDetailVO;
 import com.zero.logistics.vo.OrderTableVO;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.zero.logistics.vo.OrdersVO;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * (TOrder)表控制层
@@ -82,5 +84,20 @@ public class TOrderController {
     @PostMapping("commitOrder")
     public boolean commitOrder(@RequestBody TOrder order){
         return tOrderService.commitOrder(order);
+    }
+
+    @GetMapping("list/o_{state}")
+    public List<TOrder> list(@PathVariable int state,HttpSession session){
+        return tOrderService.list(((TCustomer)session.getAttribute(Constant.CUSTOMER)).getCustomerId(), state);
+    }
+
+    @GetMapping("cancel/o_{orderId}")
+    public boolean cancel(@PathVariable int orderId){
+        return tOrderService.cancel(orderId);
+    }
+
+    @GetMapping("listByDotId/o_{dotId}")
+    public List<OrdersVO> listByDotId(@PathVariable int dotId){
+        return tOrderService.listByDotId(dotId);
     }
 }

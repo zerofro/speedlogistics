@@ -5,6 +5,9 @@ import com.zero.logistics.entity.TOrder;
 import com.zero.logistics.util.LayPage;
 import com.zero.logistics.vo.OrderDetailVO;
 import com.zero.logistics.vo.OrderTableVO;
+import com.zero.logistics.vo.OrdersVO;
+
+import java.util.List;
 
 /**
  * (TOrder)表服务接口
@@ -19,4 +22,10 @@ public interface TOrderService extends BaseService<TOrder> {
     public OrderDetailVO getDetail(Integer orderId);
 
     public boolean commitOrder(TOrder order);
+
+    public List<TOrder> list(int customerId, int state);
+
+    public boolean cancel(int orderId);
+
+    public List<OrdersVO> listByDotId(int dotId);
 }

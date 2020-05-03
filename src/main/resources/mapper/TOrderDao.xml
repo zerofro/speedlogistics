@@ -144,6 +144,11 @@
         where order_id = #{orderId}
     </update>
 
+    <!--更新状态-->
+    <update id="updateState">
+        UPDATE t_order SET state = #{state} WHERE order_id = #{orderId}
+    </update>
+
     <!--通过主键删除-->
     <delete id="deleteById">
         delete from speedlogisticsdb.t_order where order_id = #{id}
@@ -207,6 +212,26 @@
         AND (o.`sender_address_id` = a.`address_id` OR o.`receive_address_id` = a.`address_id`)
         AND o.`order_id` = #{orderId}
         GROUP BY o.`order_id`
+    </select>
+
+    <!--获取订单列表-->
+    <select id="list" resultType="com.zero.logistics.entity.TOrder">
+        SELECT o.`order_id`,o.`order_time`
+        FROM `t_order` o
+        JOIN `t_customer` c ON c.`customer_id` = o.`customer_id`
+        WHERE c.`customer_id` = #{customerId} AND o.state = #{state}
+        ORDER BY o.`order_time` DESC
+    </select>
+
+    <!--根据网点获取订单列表-->
+    <select id="listByDotId" resultType="com.zero.logistics.vo.OrdersVO">
+        SELECT o.order_id,MAX(CASE a.type WHEN 0 THEN a.owner_name ELSE NULL END) senderName,
+            MAX(CASE a.type WHEN 1 THEN a.owner_name ELSE NULL END) receiverName,o.order_time
+        FROM t_order o
+            JOIN t_address a ON (a.address_id = o.sender_address_id
+                OR a.address_id = o.receive_address_id)
+        WHERE dot_id = #{dotId}
+        GROUP BY o.order_id
     </select>
 
 </mapper>

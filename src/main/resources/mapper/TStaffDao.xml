@@ -179,6 +179,20 @@
         LIMIT #{startRow}, #{pageSize}
     </select>
 
+    <!--通过微信id获取员工信息-->
+    <select id="queryByWxId" resultType="com.zero.logistics.entity.TStaff">
+        SELECT *
+        FROM t_staff
+        WHERE wx_id = #{wxId}
+    </select>
+
+    <!--根据登录名获取信息-->
+    <select id="queryByPwd" resultType="com.zero.logistics.entity.TStaff">
+        SELECT * FROM t_staff
+        WHERE staff_login_name = #{staffLoginName}
+            AND staff_password = #{staffPassword}
+    </select>
+
     <!--批量删除-->
     <update id="invalidByIds">
         UPDATE `t_staff` SET `state` = 0

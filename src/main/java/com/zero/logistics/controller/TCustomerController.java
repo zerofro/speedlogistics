@@ -29,8 +29,6 @@ public class TCustomerController {
      */
     @Resource
     private TCustomerService tCustomerService;
-    @Resource
-    private HttpRequestUtil httpRequestUtil;
 
     @RequestMapping("login")
     @ResponseBody
@@ -38,7 +36,7 @@ public class TCustomerController {
         //访问微信接口，获取openid
         String url = "https://api.weixin.qq.com/sns/jscode2session";
         String params = "appid="+ Constant.APPID+"&secret=" + Constant.SECRET + "&js_code=" + code + "&grant_type=authorization_code";
-        String result = httpRequestUtil.sendGet(url, params);
+        String result = HttpRequestUtil.sendGet(url, params);
         System.out.println(result);
         JSONObject jsonObject = JSONObject.parseObject(result);
         String openid = jsonObject.getString("openid");
