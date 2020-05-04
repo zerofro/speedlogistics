@@ -21,7 +21,7 @@ public interface TOrderService extends BaseService<TOrder> {
 
     public OrderDetailVO getDetail(Integer orderId);
 
-    public boolean commitOrder(TOrder order);
+    public int commitOrder(TOrder order);
 
     public List<TOrder> list(int customerId, int state);
 

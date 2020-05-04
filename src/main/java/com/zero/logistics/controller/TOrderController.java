@@ -85,7 +85,7 @@ public class TOrderController {
     }
 
     @PostMapping("commitOrder")
-    public boolean commitOrder(@RequestBody TOrder order){
+    public Integer commitOrder(@RequestBody TOrder order){
         return tOrderService.commitOrder(order);
     }
 

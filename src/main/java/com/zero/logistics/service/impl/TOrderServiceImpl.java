@@ -1,11 +1,14 @@
 package com.zero.logistics.service.impl;
 
+import com.zero.logistics.dao.TDotDao;
 import com.zero.logistics.dao.TOrderDao;
 import com.zero.logistics.dao.TWaybillDao;
+import com.zero.logistics.dto.GeoDotDTO;
 import com.zero.logistics.dto.OrderTableDTO;
 import com.zero.logistics.entity.TOrder;
 import com.zero.logistics.entity.TWaybill;
 import com.zero.logistics.service.TOrderService;
+import com.zero.logistics.util.GeoApiUtil;
 import com.zero.logistics.util.LayPage;
 import com.zero.logistics.vo.OrderDetailVO;
 import com.zero.logistics.vo.OrderTableVO;
@@ -30,6 +33,9 @@ public class TOrderServiceImpl implements TOrderService {
 
     @Resource
     private TWaybillDao tWaybillDao;
+
+    @Resource
+    private TDotDao tDotDao;
 
     /**
      * 通过ID查询单条数据
@@ -119,9 +125,22 @@ public class TOrderServiceImpl implements TOrderService {
      * @return
      */
     @Override
-    public boolean commitOrder(TOrder order) {
-        int rows = tOrderDao.insert(order);
-        return rows > 0;
+    public int commitOrder(TOrder order) {
+        //获取附近的网点信息，获取最近的网点
+        List<GeoDotDTO> dotList = tDotDao.getNearByAddressId(order.getSenderAddressId());
+        if (dotList.size() > 0){
+            int index = 0;
+            if (dotList.size() > 1){
+                List<String> startAddrList = new ArrayList<>();
+                dotList.forEach(d->startAddrList.add(d.getDotAddress()));
+                index = GeoApiUtil.getMinDistanceIndexByAddr(startAddrList, dotList.get(0).getEndAddress());
+            }
+            order.setDotId(dotList.get(index).getDotId());
+            return tOrderDao.insert(order);
+        }else {
+            //附近不存在网点
+            return -1;
+        }
     }
 
     @Override

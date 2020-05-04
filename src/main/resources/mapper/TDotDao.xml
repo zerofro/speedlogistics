@@ -4,7 +4,9 @@
 
     <resultMap type="com.zero.logistics.entity.TDot" id="TDotMap">
         <result property="dotId" column="dot_id" jdbcType="INTEGER"/>
-        <result property="dotCity" column="dot_city" jdbcType="VARCHAR"/>
+        <result property="province" column="province" jdbcType="VARCHAR"/>
+        <result property="city" column="city" jdbcType="VARCHAR"/>
+        <result property="area" column="area" jdbcType="VARCHAR"/>
         <result property="dotAddress" column="dot_address" jdbcType="VARCHAR"/>
         <result property="dotName" column="dot_name" jdbcType="VARCHAR"/>
         <result property="dotPhone" column="dot_phone" jdbcType="VARCHAR"/>
@@ -14,7 +16,7 @@
     <!--查询单个-->
     <select id="queryById" resultMap="TDotMap">
         select
-          dot_id, dot_city, dot_address, dot_name, dot_phone, state
+          dot_id, province, city, area, dot_address, dot_name, dot_phone, state
         from speedlogisticsdb.t_dot
         where dot_id = #{dotId}
     </select>
@@ -22,7 +24,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="TDotMap">
         select
-          dot_id, dot_city, dot_address, dot_name, dot_phone, state
+          dot_id, province, city, area, dot_address, dot_name, dot_phone, state
         from speedlogisticsdb.t_dot
         limit #{offset}, #{limit}
     </select>
@@ -30,14 +32,20 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TDotMap">
         select
-          dot_id, dot_city, dot_address, dot_name, dot_phone, state
+          dot_id, province, city, area, dot_address, dot_name, dot_phone, state
         from speedlogisticsdb.t_dot
         <where>
             <if test="dotId != null">
                 and dot_id = #{dotId}
             </if>
-            <if test="dotCity != null and dotCity != ''">
-                and dot_city = #{dotCity}
+            <if test="province != null and province != ''">
+                and province = #{province}
+            </if>
+            <if test="city != null and city != ''">
+                and city = #{city}
+            </if>
+            <if test="area != null and area != ''">
+                and area = #{area}
             </if>
             <if test="dotAddress != null and dotAddress != ''">
                 and dot_address = #{dotAddress}
@@ -56,16 +64,22 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="dotId" useGeneratedKeys="true">
-        insert into speedlogisticsdb.t_dot(dot_city, dot_address, dot_name, dot_phone)
-        values (#{dotCity}, #{dotAddress}, #{dotName}, #{dotPhone})
+        insert into speedlogisticsdb.t_dot(province, city, area, dot_address, dot_name, dot_phone, state)
+        values (#{province}, #{city}, #{area}, #{dotAddress}, #{dotName}, #{dotPhone}, #{state})
     </insert>
 
     <!--通过主键修改数据-->
     <update id="update">
         update speedlogisticsdb.t_dot
         <set>
-            <if test="dotCity != null and dotCity != ''">
-                dot_city = #{dotCity},
+            <if test="province != null and province != ''">
+                province = #{province},
+            </if>
+            <if test="city != null and city != ''">
+                city = #{city},
+            </if>
+            <if test="area != null and area != ''">
+                area = #{area},
             </if>
             <if test="dotAddress != null and dotAddress != ''">
                 dot_address = #{dotAddress},
@@ -95,7 +109,7 @@
             and dot_name LIKE CONCAT(#{dotName},'%')
         </if>
         <if test="dotCity != null and dotCity != ''">
-            and dot_city LIKE CONCAT(#{dotCity},'%')
+            and CONCAT(province,city,area) LIKE CONCAT(#{dotCity},'%')
         </if>
         <if test="dotPhone != null and dotPhone != ''">
             and dot_phone LIKE CONCAT(#{dotPhone},'%')
@@ -104,19 +118,29 @@
 
     <!--根据条件查询页内容-->
     <select id="pageByCondition" resultMap="TDotMap">
-        SELECT * FROM `t_dot` where `state` = 1
+        SELECT *,CONCAT(province,city,area) as dotCity FROM `t_dot` where `state` = 1
         <if test="condition != null and condition != ''">
             <if test="condition.dotName != null and condition.dotName != ''">
                 and dot_name LIKE CONCAT(#{condition.dotName},'%')
             </if>
             <if test="condition.dotCity != null and condition.dotCity != ''">
-                and dot_city LIKE CONCAT(#{condition.dotCity},'%')
+                and CONCAT(province,city,area) LIKE CONCAT(#{condition.dotCity},'%')
             </if>
             <if test="condition.dotPhone != null and condition.dotPhone != ''">
                 and dot_phone LIKE CONCAT(#{condition.dotPhone},'%')
             </if>
         </if>
         LIMIT #{startRow}, #{pageSize}
+    </select>
+
+    <!--根据地址Id获取附近的网点-->
+    <select id="getNearByAddressId" resultType="com.zero.logistics.dto.GeoDotDTO">
+        SELECT d.dot_id,CONCAT(d.province,d.city,d.area,d.dot_address) dotAddress,
+            CONCAT(a.province,a.city,a.area,a.address) endAddress
+        FROM t_address a
+            JOIN t_dot d ON d.province = a.province AND d.city = a.city
+            AND d.area = a.area
+        WHERE a.address_id = #{addressId}
     </select>
 
     <!--批量删除记录-->

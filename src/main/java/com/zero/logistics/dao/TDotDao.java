@@ -1,5 +1,6 @@
 package com.zero.logistics.dao;
 
+import com.zero.logistics.dto.GeoDotDTO;
 import com.zero.logistics.entity.TDot;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
@@ -75,4 +76,11 @@ public interface TDotDao {
     public int batchDelete(@Param("dotIds") List<Integer> dotIds);
 
     public int invalidById(Integer dotId);
+
+    /**
+     * 根据地址Id获取附近的网点
+     * @param addressId
+     * @return
+     */
+    public List<GeoDotDTO> getNearByAddressId(int addressId);
 }

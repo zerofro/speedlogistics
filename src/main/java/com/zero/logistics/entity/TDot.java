@@ -6,18 +6,26 @@ import java.io.Serializable;
  * (TDot)实体类
  *
  * @author makejava
- * @since 2020-03-28 14:39:23
+ * @since 2020-05-04 14:03:00
  */
 public class TDot implements Serializable {
-    private static final long serialVersionUID = 819862913258224184L;
+    private static final long serialVersionUID = 372254987689374279L;
     /**
     * 网点编号
     */
     private Integer dotId;
     /**
-    * 网点所属城市
+    * 省份
     */
-    private String dotCity;
+    private String province;
+    /**
+    * 城市
+    */
+    private String city;
+    /**
+    * 地区
+    */
+    private String area;
     /**
     * 网点地址
     */
@@ -35,6 +43,7 @@ public class TDot implements Serializable {
     */
     private Integer state;
 
+    private String dotCity;
 
     public Integer getDotId() {
         return dotId;
@@ -44,12 +53,28 @@ public class TDot implements Serializable {
         this.dotId = dotId;
     }
 
-    public String getDotCity() {
-        return dotCity;
+    public String getProvince() {
+        return province;
     }
 
-    public void setDotCity(String dotCity) {
-        this.dotCity = dotCity;
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public String getDotAddress() {
@@ -84,4 +109,11 @@ public class TDot implements Serializable {
         this.state = state;
     }
 
+    public String getDotCity(){
+        return this.dotCity;
+    }
+
+    public void setDotCity(String dotCity){
+        this.dotCity = dotCity;
+    }
 }
