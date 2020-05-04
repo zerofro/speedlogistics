@@ -93,6 +93,14 @@
         values (#{orderId}, #{waybillCode}, #{receiptTime}, #{confirmTime}, #{cancelTime}, #{finishTime}, #{createTime}, #{state})
     </insert>
 
+    <!--批量新增-->
+    <insert id="insertBatch">
+        INSERT INTO t_waybill(order_id,waybill_code) VALUES
+        <foreach collection="waybills" item="item" separator=",">
+            (#{item.orderId},#{item.waybillCode})
+        </foreach>
+    </insert>
+
     <!--通过主键修改数据-->
     <update id="update">
         update speedlogisticsdb.t_waybill

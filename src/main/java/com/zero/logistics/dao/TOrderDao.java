@@ -40,4 +40,11 @@ public interface TOrderDao extends BaseDao<TOrder> {
      * @return
      */
     public List<OrdersVO> listByDotId(int dotId);
+
+    /**
+     * 批量接单
+     * @param orderIds
+     * @return
+     */
+    public int ordersBatch(@Param("orderIds") List<Integer> orderIds);
 }

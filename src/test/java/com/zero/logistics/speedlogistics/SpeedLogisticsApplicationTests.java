@@ -11,6 +11,10 @@ public class SpeedLogisticsApplicationTests {
 
     @Test
     public void contextLoads() {
+
+        System.out.println(System.nanoTime());
+        System.out.println(System.nanoTime());
+        System.out.println(System.nanoTime());
     }
 
 }

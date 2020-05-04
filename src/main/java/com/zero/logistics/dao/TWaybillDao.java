@@ -19,4 +19,11 @@ public interface TWaybillDao extends BaseDao<TWaybill> {
                                          @Param("condition") Object condition);
 
     public WaybillDetailVO getDetail(int waybillId);
+
+    /**
+     * 批量新增
+     * @param waybills
+     * @return
+     */
+    public int insertBatch(@Param("waybills") List<TWaybill> waybills);
 }

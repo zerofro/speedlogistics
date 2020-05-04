@@ -32,6 +32,13 @@ public class TWaybill implements Serializable {
     */
     private Date finishTime;
 
+    public TWaybill() {
+    }
+
+    public TWaybill(Integer orderId, String waybillCode) {
+        this.orderId = orderId;
+        this.waybillCode = waybillCode;
+    }
 
     public Integer getWaybillId() {
         return waybillId;

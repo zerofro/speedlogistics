@@ -1,16 +1,20 @@
 package com.zero.logistics.service.impl;
 
 import com.zero.logistics.dao.TOrderDao;
+import com.zero.logistics.dao.TWaybillDao;
 import com.zero.logistics.dto.OrderTableDTO;
 import com.zero.logistics.entity.TOrder;
+import com.zero.logistics.entity.TWaybill;
 import com.zero.logistics.service.TOrderService;
 import com.zero.logistics.util.LayPage;
 import com.zero.logistics.vo.OrderDetailVO;
 import com.zero.logistics.vo.OrderTableVO;
 import com.zero.logistics.vo.OrdersVO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +27,9 @@ import java.util.List;
 public class TOrderServiceImpl implements TOrderService {
     @Resource
     private TOrderDao tOrderDao;
+
+    @Resource
+    private TWaybillDao tWaybillDao;
 
     /**
      * 通过ID查询单条数据
@@ -130,5 +137,24 @@ public class TOrderServiceImpl implements TOrderService {
     @Override
     public List<OrdersVO> listByDotId(int dotId) {
         return tOrderDao.listByDotId(dotId);
+    }
+
+    /**
+     * 批量接单
+     * @param orderIds
+     * @return
+     */
+    @Override
+    @Transactional
+    public boolean orderBatch(List<Integer> orderIds) {
+        if (tOrderDao.ordersBatch(orderIds) > 0){
+            //生成运单
+            List<TWaybill> waybills = new ArrayList<>();
+            orderIds.forEach(o->{
+                waybills.add(new TWaybill(o, String.valueOf(System.nanoTime())));
+            });
+            return tWaybillDao.insertBatch(waybills) > 0;
+        }
+        return false;
     }
 }

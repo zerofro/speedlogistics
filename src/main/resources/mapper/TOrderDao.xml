@@ -149,6 +149,15 @@
         UPDATE t_order SET state = #{state} WHERE order_id = #{orderId}
     </update>
 
+    <!--批量接单-->
+    <update id="ordersBatch">
+        UPDATE t_order SET state = 1
+        WHERE order_id IN
+        <foreach collection="orderIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
     <!--通过主键删除-->
     <delete id="deleteById">
         delete from speedlogisticsdb.t_order where order_id = #{id}
@@ -230,7 +239,7 @@
         FROM t_order o
             JOIN t_address a ON (a.address_id = o.sender_address_id
                 OR a.address_id = o.receive_address_id)
-        WHERE dot_id = #{dotId}
+        WHERE o.dot_id = #{dotId} AND o.state = 0
         GROUP BY o.order_id
     </select>
 

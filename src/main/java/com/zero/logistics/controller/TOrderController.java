@@ -1,5 +1,7 @@
 package com.zero.logistics.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zero.logistics.constants.Constant;
 import com.zero.logistics.dto.OrderTableDTO;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -99,5 +102,15 @@ public class TOrderController {
     @GetMapping("listByDotId/o_{dotId}")
     public List<OrdersVO> listByDotId(@PathVariable int dotId){
         return tOrderService.listByDotId(dotId);
+    }
+
+    @PostMapping("ordersBatch")
+    public boolean ordersBatch(@RequestParam String orderIdsStr){
+        JSONArray jsonArray = JSON.parseArray(orderIdsStr);
+        List<Integer> orderIds = new ArrayList<>();
+        for (int i = 0; i < jsonArray.size(); i++) {
+            orderIds.add(jsonArray.getInteger(i));
+        }
+        return orderIds.size()==0?false:tOrderService.orderBatch(orderIds);
     }
 }
