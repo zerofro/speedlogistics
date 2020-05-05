@@ -2,6 +2,7 @@ package com.zero.logistics.service;
 
 import com.zero.logistics.entity.TWaybill;
 import com.zero.logistics.util.LayPage;
+import com.zero.logistics.vo.PackageDetailVO;
 import com.zero.logistics.vo.StaffPackageVO;
 import com.zero.logistics.vo.WaybillDetailVO;
 import com.zero.logistics.vo.WaybillTableVO;
@@ -20,4 +21,6 @@ public interface TWaybillService extends BaseService<TWaybill> {
     public WaybillDetailVO getDetail(int waybillId);
 
     public List<StaffPackageVO> listPackage(int dotId);
+
+    public PackageDetailVO packageDetail(int waybillId);
 }

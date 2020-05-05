@@ -1,6 +1,7 @@
 package com.zero.logistics.dao;
 
 import com.zero.logistics.entity.TWaybill;
+import com.zero.logistics.vo.PackageDetailVO;
 import com.zero.logistics.vo.StaffPackageVO;
 import com.zero.logistics.vo.WaybillDetailVO;
 import com.zero.logistics.vo.WaybillTableVO;
@@ -34,4 +35,11 @@ public interface TWaybillDao extends BaseDao<TWaybill> {
      * @return
      */
     public List<StaffPackageVO> listPackage(int dotId);
+
+    /**
+     * 获取揽件的详情
+     * @param waybillId
+     * @return
+     */
+    public PackageDetailVO packageDetail(int waybillId);
 }

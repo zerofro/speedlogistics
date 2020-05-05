@@ -171,4 +171,24 @@
         WHERE w.dot_id = #{dotId}
     </select>
 
+    <!--获取揽件的详情-->
+    <select id="packageDetail" resultType="com.zero.logistics.vo.PackageDetailVO">
+        SELECT
+            w.waybill_id,w.waybill_code,o.weight,s.res_sort AS sortName,
+            MAX(CASE a.type WHEN 0 THEN CONCAT(a.owner_name,' ',a.phone) ELSE NULL END) sender,
+            MAX(CASE a.type WHEN 1 THEN CONCAT(a.owner_name,' ',a.phone) ELSE NULL END) receiver,
+            MAX(CASE a.type WHEN 0 THEN CONCAT(a.province
+            ,a.city,a.area,a.address) ELSE NULL END) sendAddress,
+            MAX(CASE a.type WHEN 1 THEN CONCAT(a.province
+            ,a.city,a.area,a.address) ELSE NULL END) receiveAddress
+        FROM
+            t_waybill w
+            JOIN t_order o ON o.order_id = w.order_id
+            JOIN t_address a ON a.address_id = o.sender_address_id
+            OR a.address_id = o.receive_address_id
+            JOIN t_res_sort s ON s.res_sort_id = o.res_sort_id
+        WHERE
+            w.waybill_id = #{waybillId}
+    </select>
+
 </mapper>

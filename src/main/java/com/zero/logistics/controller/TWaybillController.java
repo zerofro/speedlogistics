@@ -5,11 +5,9 @@ import com.zero.logistics.constants.Constant;
 import com.zero.logistics.entity.TStaff;
 import com.zero.logistics.service.TWaybillService;
 import com.zero.logistics.util.LayPage;
-import com.zero.logistics.vo.OrderTableVO;
-import com.zero.logistics.vo.StaffPackageVO;
-import com.zero.logistics.vo.WaybillDetailVO;
-import com.zero.logistics.vo.WaybillTableVO;
+import com.zero.logistics.vo.*;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -58,5 +56,10 @@ public class TWaybillController {
     public List<StaffPackageVO> listPackage(HttpSession session){
         TStaff staff = (TStaff) session.getAttribute(Constant.STAFF);
         return tWaybillService.listPackage(staff.getDotId());
+    }
+
+    @GetMapping("packageDetail/w_{waybillId}")
+    public PackageDetailVO packageDetail(@PathVariable int waybillId){
+        return tWaybillService.packageDetail(waybillId);
     }
 }

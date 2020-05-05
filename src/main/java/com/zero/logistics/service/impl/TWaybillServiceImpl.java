@@ -121,4 +121,14 @@ public class TWaybillServiceImpl implements TWaybillService {
     public List<StaffPackageVO> listPackage(int dotId) {
         return tWaybillDao.listPackage(dotId);
     }
+
+    /**
+     * 获取揽件详情
+     * @param waybillId
+     * @return
+     */
+    @Override
+    public PackageDetailVO packageDetail(int waybillId) {
+        return tWaybillDao.packageDetail(waybillId);
+    }
 }
