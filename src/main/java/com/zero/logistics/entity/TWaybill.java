@@ -15,6 +15,8 @@ public class TWaybill implements Serializable {
     * 运单编号
     */
     private Integer waybillId;
+
+    private Integer dotId;
     /**
     * 订单编号
     */
@@ -35,7 +37,8 @@ public class TWaybill implements Serializable {
     public TWaybill() {
     }
 
-    public TWaybill(Integer orderId, String waybillCode) {
+    public TWaybill(Integer dotId,Integer orderId, String waybillCode) {
+        this.dotId = dotId;
         this.orderId = orderId;
         this.waybillCode = waybillCode;
     }
@@ -80,4 +83,11 @@ public class TWaybill implements Serializable {
         this.finishTime = finishTime;
     }
 
+    public Integer getDotId() {
+        return dotId;
+    }
+
+    public void setDotId(Integer dotId) {
+        this.dotId = dotId;
+    }
 }

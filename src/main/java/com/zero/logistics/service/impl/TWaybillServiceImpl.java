@@ -6,10 +6,7 @@ import com.zero.logistics.dao.TWaybillDao;
 import com.zero.logistics.entity.TWaybill;
 import com.zero.logistics.service.TWaybillService;
 import com.zero.logistics.util.LayPage;
-import com.zero.logistics.vo.LogisticsVO;
-import com.zero.logistics.vo.SendVO;
-import com.zero.logistics.vo.WaybillDetailVO;
-import com.zero.logistics.vo.WaybillTableVO;
+import com.zero.logistics.vo.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -114,5 +111,14 @@ public class TWaybillServiceImpl implements TWaybillService {
         detail.setLogisticsVOs(logisticsVOS);
         detail.setSendVO(sendVO);
         return detail;
+    }
+
+    /**
+     * 获取揽件信息列表
+     * @return
+     */
+    @Override
+    public List<StaffPackageVO> listPackage(int dotId) {
+        return tWaybillDao.listPackage(dotId);
     }
 }

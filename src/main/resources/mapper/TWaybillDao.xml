@@ -6,12 +6,8 @@
         <result property="waybillId" column="waybill_id" jdbcType="INTEGER"/>
         <result property="orderId" column="order_id" jdbcType="INTEGER"/>
         <result property="waybillCode" column="waybill_code" jdbcType="VARCHAR"/>
-        <result property="receiptTime" column="receipt_time" jdbcType="TIMESTAMP"/>
-        <result property="confirmTime" column="confirm_time" jdbcType="TIMESTAMP"/>
-        <result property="cancelTime" column="cancel_time" jdbcType="TIMESTAMP"/>
-        <result property="finishTime" column="finish_time" jdbcType="TIMESTAMP"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="finishTime" column="finish_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <resultMap id="detailMap" type="com.zero.logistics.vo.WaybillDetailVO">
@@ -34,11 +30,10 @@
         </collection>
     </resultMap>
 
-
     <!--查询单个-->
     <select id="queryById" resultMap="TWaybillMap">
         select
-          waybill_id, order_id, waybill_code, receipt_time, confirm_time, cancel_time, finish_time, create_time, state
+          waybill_id, order_id, waybill_code, create_time, finish_time
         from speedlogisticsdb.t_waybill
         where waybill_id = #{waybillId}
     </select>
@@ -46,7 +41,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="TWaybillMap">
         select
-          waybill_id, order_id, waybill_code, receipt_time, confirm_time, cancel_time, finish_time, create_time, state
+          waybill_id, order_id, waybill_code, create_time, finish_time
         from speedlogisticsdb.t_waybill
         limit #{offset}, #{limit}
     </select>
@@ -54,7 +49,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TWaybillMap">
         select
-          waybill_id, order_id, waybill_code, receipt_time, confirm_time, cancel_time, finish_time, create_time, state
+          waybill_id, order_id, waybill_code, create_time, finish_time
         from speedlogisticsdb.t_waybill
         <where>
             <if test="waybillId != null">
@@ -66,39 +61,19 @@
             <if test="waybillCode != null and waybillCode != ''">
                 and waybill_code = #{waybillCode}
             </if>
-            <if test="receiptTime != null">
-                and receipt_time = #{receiptTime}
-            </if>
-            <if test="confirmTime != null">
-                and confirm_time = #{confirmTime}
-            </if>
-            <if test="cancelTime != null">
-                and cancel_time = #{cancelTime}
-            </if>
-            <if test="finishTime != null">
-                and finish_time = #{finishTime}
-            </if>
             <if test="createTime != null">
                 and create_time = #{createTime}
             </if>
-            <if test="state != null">
-                and state = #{state}
+            <if test="finishTime != null">
+                and finish_time = #{finishTime}
             </if>
         </where>
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="waybillId" useGeneratedKeys="true">
-        insert into speedlogisticsdb.t_waybill(order_id, waybill_code, receipt_time, confirm_time, cancel_time, finish_time, create_time, state)
-        values (#{orderId}, #{waybillCode}, #{receiptTime}, #{confirmTime}, #{cancelTime}, #{finishTime}, #{createTime}, #{state})
-    </insert>
-
-    <!--批量新增-->
-    <insert id="insertBatch">
-        INSERT INTO t_waybill(order_id,waybill_code) VALUES
-        <foreach collection="waybills" item="item" separator=",">
-            (#{item.orderId},#{item.waybillCode})
-        </foreach>
+        insert into speedlogisticsdb.t_waybill(order_id, waybill_code, create_time, finish_time)
+        values (#{orderId}, #{waybillCode}, #{createTime}, #{finishTime})
     </insert>
 
     <!--通过主键修改数据-->
@@ -111,23 +86,11 @@
             <if test="waybillCode != null and waybillCode != ''">
                 waybill_code = #{waybillCode},
             </if>
-            <if test="receiptTime != null">
-                receipt_time = #{receiptTime},
-            </if>
-            <if test="confirmTime != null">
-                confirm_time = #{confirmTime},
-            </if>
-            <if test="cancelTime != null">
-                cancel_time = #{cancelTime},
-            </if>
-            <if test="finishTime != null">
-                finish_time = #{finishTime},
-            </if>
             <if test="createTime != null">
                 create_time = #{createTime},
             </if>
-            <if test="state != null">
-                state = #{state},
+            <if test="finishTime != null">
+                finish_time = #{finishTime},
             </if>
         </set>
         where waybill_id = #{waybillId}
@@ -137,6 +100,14 @@
     <delete id="deleteById">
         delete from speedlogisticsdb.t_waybill where waybill_id = #{waybillId}
     </delete>
+
+    <!--批量新增-->
+    <insert id="insertBatch">
+        INSERT INTO t_waybill(dot_id,order_id,waybill_code) VALUES
+        <foreach collection="waybills" item="item" separator=",">
+            (#{item.dotId},#{item.orderId},#{item.waybillCode})
+        </foreach>
+    </insert>
 
     <!--获取总记录数-->
     <select id="getCount" resultType="int">
@@ -185,6 +156,19 @@
         WHERE w.`order_id` = o.`order_id` AND (o.`sender_address_id` = a.`address_id`
         OR o.`receive_address_id` = a.`address_id`) AND w.`waybill_id` = #{waybillId}
         GROUP BY w.`waybill_code`
+    </select>
+
+    <!--获取网点订单-->
+    <select id="listPackage" resultType="com.zero.logistics.vo.StaffPackageVO">
+        SELECT
+            w.waybill_id,w.waybill_code,w.create_time,
+            MAX(CASE a.type WHEN 0 THEN a.owner_name ELSE NULL END) senderName,
+            MAX(CASE a.type WHEN 1 THEN a.owner_name ELSE NULL END) receiverName
+        FROM t_waybill w
+            JOIN t_order o ON o.order_id = w.order_id
+            JOIN t_address a ON a.address_id = o.sender_address_id
+            OR a.address_id = o.receive_address_id
+        WHERE w.dot_id = #{dotId}
     </select>
 
 </mapper>

@@ -1,15 +1,21 @@
 package com.zero.logistics.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zero.logistics.constants.Constant;
+import com.zero.logistics.entity.TStaff;
 import com.zero.logistics.service.TWaybillService;
 import com.zero.logistics.util.LayPage;
 import com.zero.logistics.vo.OrderTableVO;
+import com.zero.logistics.vo.StaffPackageVO;
 import com.zero.logistics.vo.WaybillDetailVO;
 import com.zero.logistics.vo.WaybillTableVO;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * (TWaybill)表控制层
@@ -46,5 +52,11 @@ public class TWaybillController {
             return null;
         WaybillDetailVO detail = tWaybillService.getDetail(waybillId);
         return detail;
+    }
+
+    @GetMapping("listPackage")
+    public List<StaffPackageVO> listPackage(HttpSession session){
+        TStaff staff = (TStaff) session.getAttribute(Constant.STAFF);
+        return tWaybillService.listPackage(staff.getDotId());
     }
 }

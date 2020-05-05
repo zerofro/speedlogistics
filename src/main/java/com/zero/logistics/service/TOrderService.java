@@ -29,5 +29,5 @@ public interface TOrderService extends BaseService<TOrder> {
 
     public List<OrdersVO> listByDotId(int dotId);
 
-    public boolean orderBatch(List<Integer> orderIds);
+    public boolean orderBatch(List<Integer> orderIds, Integer dotId);
 }

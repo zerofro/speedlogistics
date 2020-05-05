@@ -165,12 +165,12 @@ public class TOrderServiceImpl implements TOrderService {
      */
     @Override
     @Transactional
-    public boolean orderBatch(List<Integer> orderIds) {
+    public boolean orderBatch(List<Integer> orderIds, Integer dotId) {
         if (tOrderDao.ordersBatch(orderIds) > 0){
             //生成运单
             List<TWaybill> waybills = new ArrayList<>();
             orderIds.forEach(o->{
-                waybills.add(new TWaybill(o, String.valueOf(System.nanoTime())));
+                waybills.add(new TWaybill(dotId,o, String.valueOf(System.nanoTime())));
             });
             return tWaybillDao.insertBatch(waybills) > 0;
         }

@@ -7,6 +7,7 @@ import com.zero.logistics.constants.Constant;
 import com.zero.logistics.dto.OrderTableDTO;
 import com.zero.logistics.entity.TCustomer;
 import com.zero.logistics.entity.TOrder;
+import com.zero.logistics.entity.TStaff;
 import com.zero.logistics.service.TOrderService;
 import com.zero.logistics.util.LayPage;
 import com.zero.logistics.vo.OrderDetailVO;
@@ -105,12 +106,13 @@ public class TOrderController {
     }
 
     @PostMapping("ordersBatch")
-    public boolean ordersBatch(@RequestParam String orderIdsStr){
+    public boolean ordersBatch(@RequestParam String orderIdsStr, HttpSession session){
         JSONArray jsonArray = JSON.parseArray(orderIdsStr);
         List<Integer> orderIds = new ArrayList<>();
         for (int i = 0; i < jsonArray.size(); i++) {
             orderIds.add(jsonArray.getInteger(i));
         }
-        return orderIds.size()==0?false:tOrderService.orderBatch(orderIds);
+        TStaff staff = (TStaff) session.getAttribute(Constant.STAFF);
+        return orderIds.size()==0?false:tOrderService.orderBatch(orderIds, staff.getDotId());
     }
 }
