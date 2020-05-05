@@ -155,7 +155,8 @@ public class TOrderServiceImpl implements TOrderService {
 
     @Override
     public List<OrdersVO> listByDotId(int dotId) {
-        return tOrderDao.listByDotId(dotId);
+        List<OrdersVO> resultList = tOrderDao.listByDotId(dotId);
+        return resultList;
     }
 
     /**
@@ -175,5 +176,16 @@ public class TOrderServiceImpl implements TOrderService {
             return tWaybillDao.insertBatch(waybills) > 0;
         }
         return false;
+    }
+
+    /**
+     * 更新订单状态
+     * @param orderId
+     * @param state
+     * @return
+     */
+    @Override
+    public boolean updateState(int orderId, int state) {
+        return tOrderDao.updateState(orderId, state) > 0;
     }
 }

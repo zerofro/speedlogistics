@@ -115,4 +115,9 @@ public class TOrderController {
         TStaff staff = (TStaff) session.getAttribute(Constant.STAFF);
         return orderIds.size()==0?false:tOrderService.orderBatch(orderIds, staff.getDotId());
     }
+
+    @PostMapping("updateState")
+    public boolean updateState(@RequestParam("orderId") int orderId, @RequestParam("state") int state){
+        return tOrderService.updateState(orderId, state);
+    }
 }

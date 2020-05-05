@@ -47,4 +47,5 @@ public interface TOrderDao extends BaseDao<TOrder> {
      * @return
      */
     public int ordersBatch(@Param("orderIds") List<Integer> orderIds);
+
 }
