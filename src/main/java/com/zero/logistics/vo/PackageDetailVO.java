@@ -18,6 +18,7 @@ public class PackageDetailVO implements Serializable {
     private String sendAddress;
     private String receiver;
     private String receiveAddress;
+    private String dotName;
 
     public Integer getOrderId() {
         return orderId;
@@ -81,5 +82,13 @@ public class PackageDetailVO implements Serializable {
 
     public void setReceiveAddress(String receiveAddress) {
         this.receiveAddress = receiveAddress;
+    }
+
+    public String getDotName() {
+        return dotName;
+    }
+
+    public void setDotName(String dotName) {
+        this.dotName = dotName;
     }
 }

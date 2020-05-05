@@ -23,4 +23,6 @@ public interface TWaybillService extends BaseService<TWaybill> {
     public List<StaffPackageVO> listPackage(int dotId);
 
     public PackageDetailVO packageDetail(int waybillId);
+
+    public PackageDetailVO getDetailByCode(String code);
 }

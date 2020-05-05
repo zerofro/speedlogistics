@@ -62,4 +62,9 @@ public class TWaybillController {
     public PackageDetailVO packageDetail(@PathVariable int waybillId){
         return tWaybillService.packageDetail(waybillId);
     }
+
+    @GetMapping("getDetailByCode/w_{code}")
+    public PackageDetailVO getDetailByCode(@PathVariable String code){
+        return tWaybillService.getDetailByCode(code);
+    }
 }

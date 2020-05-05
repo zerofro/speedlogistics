@@ -191,4 +191,24 @@
             w.waybill_id = #{waybillId}
     </select>
 
+    <!--通过运单号获取详细信息-->
+    <select id="getDetailByCode" resultType="com.zero.logistics.vo.PackageDetailVO">
+        SELECT
+            MAX(CASE a.type WHEN 0 THEN CONCAT(a.owner_name,' ',a.phone) ELSE NULL END) sender,
+            MAX(CASE a.type WHEN 1 THEN CONCAT(a.owner_name,' ',a.phone) ELSE NULL END) receiver,
+            MAX(CASE a.type WHEN 0 THEN CONCAT(a.province
+            ,a.city,a.area,a.address) ELSE NULL END) sendAddress,
+            MAX(CASE a.type WHEN 1 THEN CONCAT(a.province
+            ,a.city,a.area,a.address) ELSE NULL END) receiveAddress,
+            d.dot_name
+        FROM
+            t_waybill w
+            JOIN t_order o ON o.order_id = w.order_id
+            JOIN t_address a ON a.address_id = o.sender_address_id
+            OR a.address_id = o.receive_address_id
+            JOIN t_dot d ON d.dot_id = o.dot_id
+        WHERE
+            w.waybill_code = #{code}
+    </select>
+
 </mapper>

@@ -42,4 +42,11 @@ public interface TWaybillDao extends BaseDao<TWaybill> {
      * @return
      */
     public PackageDetailVO packageDetail(int waybillId);
+
+    /**
+     * 通过运单号获取详细信息
+     * @param code
+     * @return
+     */
+    public PackageDetailVO getDetailByCode(String code);
 }

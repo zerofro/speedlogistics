@@ -132,4 +132,14 @@ public class TWaybillServiceImpl implements TWaybillService {
     public PackageDetailVO packageDetail(int waybillId) {
         return tWaybillDao.packageDetail(waybillId);
     }
+
+    /**
+     * 通过运单号获取详细信息
+     * @param code
+     * @return
+     */
+    @Override
+    public PackageDetailVO getDetailByCode(String code) {
+        return tWaybillDao.getDetailByCode(code);
+    }
 }
