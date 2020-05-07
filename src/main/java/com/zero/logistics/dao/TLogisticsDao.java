@@ -1,6 +1,7 @@
 package com.zero.logistics.dao;
 
 import com.zero.logistics.entity.TLogistics;
+import com.zero.logistics.vo.LogisticsDetailVO;
 import com.zero.logistics.vo.LogisticsVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -64,5 +65,12 @@ public interface TLogisticsDao {
      */
     int deleteById(Integer logisticsId);
 
-    public List<LogisticsVO> getByWaybillId(int waybillId);
+    List<LogisticsVO> getByWaybillId(int waybillId);
+
+    /**
+     * 根据运单号获取物流详情列表
+     * @param waybillCode
+     * @return
+     */
+    List<LogisticsDetailVO> getDetailList(String waybillCode);
 }

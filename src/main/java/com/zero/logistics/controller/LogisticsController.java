@@ -5,13 +5,12 @@ import com.zero.logistics.dto.LogisticsAddDTO;
 import com.zero.logistics.entity.TLogistics;
 import com.zero.logistics.entity.TStaff;
 import com.zero.logistics.service.ILogisticsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.zero.logistics.vo.LogisticsDetailVO;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @ClassName LogisticsController
@@ -36,5 +35,10 @@ public class LogisticsController {
 
         TLogistics tLogistics = new TLogistics(logisticsAddDTO.getWaybillId(), staff.getStaffId(), logisticsAddDTO.getStartDotId(), logisticsAddDTO.getTargetDotId(), logisticsAddDTO.getLogisticsType());
         return logisticsService.insert(tLogistics).getLogisticsId() != null;
+    }
+
+    @GetMapping("listDetail/l_{waybillCode}")
+    public List<LogisticsDetailVO> listDetail(@PathVariable String waybillCode){
+        return logisticsService.listDetail(waybillCode);
     }
 }

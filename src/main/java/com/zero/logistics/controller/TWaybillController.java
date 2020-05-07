@@ -2,14 +2,12 @@ package com.zero.logistics.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zero.logistics.constants.Constant;
+import com.zero.logistics.entity.TLogistics;
 import com.zero.logistics.entity.TStaff;
 import com.zero.logistics.service.TWaybillService;
 import com.zero.logistics.util.LayPage;
 import com.zero.logistics.vo.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -66,5 +64,17 @@ public class TWaybillController {
     @GetMapping("getDetailByCode/w_{code}")
     public PackageDetailVO getDetailByCode(@PathVariable String code){
         return tWaybillService.getDetailByCode(code);
+    }
+
+    @PostMapping("doPackage")
+    public boolean doPackage(@RequestParam("orderId") Integer orderId ,@RequestParam("waybillId") Integer waybillId, HttpSession session){
+        TStaff staff = (TStaff) session.getAttribute(Constant.STAFF);
+        TLogistics tLogistics = new TLogistics(waybillId, staff.getStaffId(), null, staff.getDotId(), -1);
+        return tWaybillService.doPackage(orderId, tLogistics);
+    }
+
+    @GetMapping("getByCode/w_{waybillCode}")
+    public WaybillListVO getByCode(@PathVariable String waybillCode){
+        return tWaybillService.getByCode(waybillCode);
     }
 }

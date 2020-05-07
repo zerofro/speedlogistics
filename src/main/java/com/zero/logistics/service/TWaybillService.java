@@ -1,11 +1,9 @@
 package com.zero.logistics.service;
 
+import com.zero.logistics.entity.TLogistics;
 import com.zero.logistics.entity.TWaybill;
 import com.zero.logistics.util.LayPage;
-import com.zero.logistics.vo.PackageDetailVO;
-import com.zero.logistics.vo.StaffPackageVO;
-import com.zero.logistics.vo.WaybillDetailVO;
-import com.zero.logistics.vo.WaybillTableVO;
+import com.zero.logistics.vo.*;
 
 import java.util.List;
 
@@ -25,4 +23,8 @@ public interface TWaybillService extends BaseService<TWaybill> {
     public PackageDetailVO packageDetail(int waybillId);
 
     public PackageDetailVO getDetailByCode(String code);
+
+    boolean doPackage(int orderId, TLogistics logistics);
+
+    WaybillListVO getByCode(String waybillCode);
 }

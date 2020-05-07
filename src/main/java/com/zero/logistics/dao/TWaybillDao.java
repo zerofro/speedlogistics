@@ -1,10 +1,7 @@
 package com.zero.logistics.dao;
 
 import com.zero.logistics.entity.TWaybill;
-import com.zero.logistics.vo.PackageDetailVO;
-import com.zero.logistics.vo.StaffPackageVO;
-import com.zero.logistics.vo.WaybillDetailVO;
-import com.zero.logistics.vo.WaybillTableVO;
+import com.zero.logistics.vo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -49,4 +46,11 @@ public interface TWaybillDao extends BaseDao<TWaybill> {
      * @return
      */
     public PackageDetailVO getDetailByCode(String code);
+
+    /**
+     * 通过运单号获取运单信息
+     * @param code
+     * @return
+     */
+    public WaybillListVO getByCode(String code);
 }

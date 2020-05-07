@@ -213,4 +213,21 @@
             w.waybill_code = #{code}
     </select>
 
+    <!--通过运单号获取运单信息-->
+    <select id="getByCode" resultType="com.zero.logistics.vo.WaybillListVO">
+        SELECT
+            w.order_id,w.waybill_id,w.waybill_code,
+            MAX(CASE a.type WHEN 0 THEN a.owner_name ELSE NULL END) AS senderName,
+            MAX(CASE a.type WHEN 1 THEN a.owner_name ELSE NULL END) AS receiveName,
+            MAX(CASE a.type WHEN 0 THEN CONCAT(a.province,a.city,a.area,a.address) ELSE NULL END) AS sendAddress,
+            MAX(CASE a.type WHEN 1 THEN CONCAT(a.province,a.city,a.area,a.address) ELSE NULL END) AS receiveAddress,
+            o.order_time
+        FROM
+            t_waybill w
+            LEFT JOIN t_order o ON o.order_id = w.order_id
+            LEFT JOIN t_address a ON o.sender_address_id = a.address_id
+            OR o.receive_address_id = a.address_id
+        WHERE w.waybill_code = #{code}
+    </select>
+
 </mapper>

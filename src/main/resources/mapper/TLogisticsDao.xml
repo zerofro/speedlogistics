@@ -105,4 +105,56 @@
         GROUP BY l.`logistics_id`
     </select>
 
+    <!--根据运单号获取物流详情列表-->
+    <select id="getDetailList" resultType="com.zero.logistics.vo.LogisticsDetailVO">
+        SELECT
+            CASE s.sign_state
+            WHEN 0 THEN
+                '已签收，签收人凭取货码验收'
+            WHEN 1 THEN
+                CONCAT('已拒收,原因：',IFNULL(s.reject_reasons,'客户未填写'))
+            ELSE
+                NULL
+        END `desc`,s.sign_time AS logTime
+        FROM
+            t_waybill w
+            LEFT JOIN t_send s ON s.waybill_id = w.waybill_id
+        WHERE w.waybill_code = #{waybillCode} AND s.sign_state IS NOT NULL
+        UNION ALL
+        SELECT
+            CONCAT('派送员：',st.staff_name,'[',st.staff_phone,'] 正在为您派件') AS `desc`,
+            s.send_time AS logTime
+        FROM
+            t_waybill w
+            LEFT JOIN t_send s ON s.waybill_id = w.waybill_id
+            LEFT JOIN t_staff st ON st.staff_id = s.staff_id
+        WHERE w.waybill_code = #{waybillCode}
+        UNION ALL
+        SELECT
+            CASE l.logistics_type
+            WHEN -1 THEN
+                CONCAT(d.dot_name,'[',d.dot_phone,']',' 已揽收')
+            WHEN 0 THEN
+                CONCAT(
+                '已从 ',
+                MAX(CASE l.start_dot_id WHEN d.dot_id THEN d.dot_name ELSE NULL END)
+                ,' 发往 ',
+                MAX(CASE l.target_dot_id WHEN d.dot_id THEN d.dot_name ELSE NULL END)
+                )
+            WHEN 1 THEN
+                CONCAT('已到达 ',d.dot_name)
+            ELSE
+                NULL
+        END `desc`,
+            l.create_time AS logTime
+        FROM
+            t_waybill w
+            LEFT JOIN t_logistics l ON l.waybill_id = w.waybill_id
+            LEFT JOIN t_dot d ON d.dot_id = l.start_dot_id
+            OR d.dot_id = l.target_dot_id
+        WHERE w.waybill_code = #{waybillCode}
+        GROUP BY l.logistics_id
+        ORDER BY logTime DESC
+    </select>
+
 </mapper>

@@ -4,6 +4,7 @@ import com.zero.logistics.dao.TLogisticsDao;
 import com.zero.logistics.entity.TLogistics;
 import com.zero.logistics.service.ILogisticsService;
 import com.zero.logistics.util.LayPage;
+import com.zero.logistics.vo.LogisticsDetailVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -86,5 +87,15 @@ public class TLogisticsServiceImpl implements ILogisticsService {
     @Override
     public boolean batchDelete(List ids) {
         return false;
+    }
+
+    /**
+     * 获取物流详情列表
+     * @param waybillCode 运单号
+     * @return 物流详情列表
+     */
+    @Override
+    public List<LogisticsDetailVO> listDetail(String waybillCode) {
+        return tLogisticsDao.getDetailList(waybillCode);
     }
 }

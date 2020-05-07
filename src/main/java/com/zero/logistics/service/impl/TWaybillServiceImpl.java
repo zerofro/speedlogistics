@@ -1,13 +1,16 @@
 package com.zero.logistics.service.impl;
 
 import com.zero.logistics.dao.TLogisticsDao;
+import com.zero.logistics.dao.TOrderDao;
 import com.zero.logistics.dao.TSendDao;
 import com.zero.logistics.dao.TWaybillDao;
+import com.zero.logistics.entity.TLogistics;
 import com.zero.logistics.entity.TWaybill;
 import com.zero.logistics.service.TWaybillService;
 import com.zero.logistics.util.LayPage;
 import com.zero.logistics.vo.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -26,6 +29,8 @@ public class TWaybillServiceImpl implements TWaybillService {
     private TLogisticsDao tLogisticsDao;
     @Resource
     private TSendDao tSendDao;
+    @Resource
+    private TOrderDao orderDao;
 
     /**
      * 通过ID查询单条数据
@@ -141,5 +146,31 @@ public class TWaybillServiceImpl implements TWaybillService {
     @Override
     public PackageDetailVO getDetailByCode(String code) {
         return tWaybillDao.getDetailByCode(code);
+    }
+
+    /**
+     * 揽件方法
+     * @param orderId
+     * @param logistics
+     * @return
+     */
+    @Override
+    @Transactional
+    public boolean doPackage(int orderId, TLogistics logistics) {
+        //添加物流
+        if (tLogisticsDao.insert(logistics) > 0){
+            return orderDao.updateState(orderId, 2) > 0;
+        }
+        return false;
+    }
+
+    /**
+     * 获取运单信息列表
+     * @param waybillCode
+     * @return
+     */
+    @Override
+    public WaybillListVO getByCode(String waybillCode) {
+        return tWaybillDao.getByCode(waybillCode);
     }
 }
