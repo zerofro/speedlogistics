@@ -169,6 +169,8 @@
             JOIN t_address a ON a.address_id = o.sender_address_id
             OR a.address_id = o.receive_address_id
         WHERE w.dot_id = #{dotId} AND o.state = 1
+        GROUP BY
+            w.waybill_id
     </select>
 
     <!--获取揽件的详情-->
@@ -200,7 +202,7 @@
             ,a.city,a.area,a.address) ELSE NULL END) sendAddress,
             MAX(CASE a.type WHEN 1 THEN CONCAT(a.province
             ,a.city,a.area,a.address) ELSE NULL END) receiveAddress,
-            d.dot_name
+            d.dot_name,w.waybill_id,o.order_id
         FROM
             t_waybill w
             JOIN t_order o ON o.order_id = w.order_id

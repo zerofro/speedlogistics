@@ -11,6 +11,7 @@ import java.io.Serializable;
  */
 public class PackageDetailVO implements Serializable {
     private Integer orderId;
+    private Integer waybillId;
     private String waybillCode;
     private Integer weight;
     private String sortName;
@@ -19,6 +20,14 @@ public class PackageDetailVO implements Serializable {
     private String receiver;
     private String receiveAddress;
     private String dotName;
+
+    public Integer getWaybillId() {
+        return waybillId;
+    }
+
+    public void setWaybillId(Integer waybillId) {
+        this.waybillId = waybillId;
+    }
 
     public Integer getOrderId() {
         return orderId;

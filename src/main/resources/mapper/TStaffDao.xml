@@ -181,16 +181,18 @@
 
     <!--通过微信id获取员工信息-->
     <select id="queryByWxId" resultType="com.zero.logistics.entity.TStaff">
-        SELECT *
-        FROM t_staff
+        SELECT s.*,d.dot_name
+        FROM t_staff s
+            join t_dot d on d.dot_id = s.dot_id
         WHERE wx_id = #{wxId}
     </select>
 
     <!--根据登录名获取信息-->
     <select id="queryByPwd" resultType="com.zero.logistics.entity.TStaff">
-        SELECT * FROM t_staff
-        WHERE staff_login_name = #{staffLoginName}
-            AND staff_password = #{staffPassword}
+        SELECT s.*,d.dot_name FROM t_staff s
+            join t_dot d on d.dot_id = s.dot_id
+        WHERE s.staff_login_name = #{staffLoginName}
+            AND s.staff_password = #{staffPassword}
     </select>
 
     <!--批量删除-->

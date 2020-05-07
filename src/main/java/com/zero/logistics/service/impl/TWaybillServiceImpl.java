@@ -120,7 +120,7 @@ public class TWaybillServiceImpl implements TWaybillService {
     @Override
     public List<StaffPackageVO> listPackage(int dotId) {
         List<StaffPackageVO> resultList = tWaybillDao.listPackage(dotId);
-        return resultList!=null&&resultList.get(0)!=null?resultList:null;
+        return resultList;
     }
 
     /**

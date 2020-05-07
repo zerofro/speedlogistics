@@ -1,5 +1,6 @@
 package com.zero.logistics.dao;
 
+import com.zero.logistics.dto.SignDTO;
 import com.zero.logistics.entity.TSend;
 import com.zero.logistics.vo.SendVO;
 import org.apache.ibatis.annotations.Param;
@@ -64,5 +65,17 @@ public interface TSendDao {
      */
     int deleteById(Long sendId);
 
+    /**
+     * 根据运单id获取派件信息
+     * @param waybillId
+     * @return
+     */
     public SendVO getByWaybillId(int waybillId);
+
+    /**
+     * 签收
+     * @param signDTO
+     * @return
+     */
+    public int sign(SignDTO signDTO);
 }

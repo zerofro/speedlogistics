@@ -40,6 +40,16 @@ public class TLogistics implements Serializable {
     */
     private Date createTime;
 
+    public TLogistics() {
+    }
+
+    public TLogistics(Integer waybillId, Integer staffId, Integer startDotId, Integer targetDotId, Integer logisticsType) {
+        this.waybillId = waybillId;
+        this.staffId = staffId;
+        this.startDotId = startDotId;
+        this.targetDotId = targetDotId;
+        this.logisticsType = logisticsType;
+    }
 
     public Integer getLogisticsId() {
         return logisticsId;
