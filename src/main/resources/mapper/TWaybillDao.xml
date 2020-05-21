@@ -230,4 +230,12 @@
         WHERE w.waybill_code = #{code}
     </select>
 
+    <!--校验运单号-->
+    <select id="checkCode" resultType="java.lang.Integer">
+        SELECT o.state
+        FROM t_order o
+            JOIN t_waybill w ON w.order_id = o.order_id
+            AND w.waybill_code = #{waybillCode}
+    </select>
+
 </mapper>

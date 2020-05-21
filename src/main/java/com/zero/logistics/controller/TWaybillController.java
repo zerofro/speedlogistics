@@ -77,4 +77,9 @@ public class TWaybillController {
     public WaybillListVO getByCode(@PathVariable String waybillCode){
         return tWaybillService.getByCode(waybillCode);
     }
+
+    @GetMapping("checkCode/w_{waybillCode}")
+    public Integer checkCode(@PathVariable String waybillCode){
+        return tWaybillService.checkCode(waybillCode);
+    }
 }

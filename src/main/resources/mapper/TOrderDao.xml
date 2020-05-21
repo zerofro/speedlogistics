@@ -224,12 +224,22 @@
     </select>
 
     <!--获取订单列表-->
-    <select id="list" resultType="com.zero.logistics.entity.TOrder">
-        SELECT o.`order_id`,o.`order_time`
-        FROM `t_order` o
-        JOIN `t_customer` c ON c.`customer_id` = o.`customer_id`
-        WHERE c.`customer_id` = #{customerId} AND o.state = #{state}
-        ORDER BY o.`order_time` DESC
+    <select id="list" resultType="com.zero.logistics.vo.OrdersVO">
+        SELECT
+            o.`order_id`,
+            MAX(CASE a.type WHEN 0 THEN a.owner_name ELSE NULL END) AS senderName,
+            MAX(CASE a.type WHEN 1 THEN a.owner_name ELSE NULL END) AS receiverName,
+            o.`order_time`
+        FROM
+            `t_order` o
+            JOIN `t_customer` c ON c.`customer_id` = o.`customer_id`
+            JOIN t_address a ON a.address_id = o.sender_address_id
+            OR a.address_id = o.receive_address_id
+        WHERE
+            c.`customer_id` = #{customerId} AND o.state = #{state}
+        GROUP BY o.order_id
+        ORDER BY
+            o.`order_time` DESC
     </select>
 
     <!--根据网点获取订单列表-->

@@ -27,4 +27,6 @@ public interface TWaybillService extends BaseService<TWaybill> {
     boolean doPackage(int orderId, TLogistics logistics);
 
     WaybillListVO getByCode(String waybillCode);
+
+    Integer checkCode(String waybillCode);
 }

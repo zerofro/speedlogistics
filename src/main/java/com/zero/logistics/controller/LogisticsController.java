@@ -33,7 +33,9 @@ public class LogisticsController {
         else if (logisticsAddDTO.getLogisticsType() == 1)
             logisticsAddDTO.setTargetDotId(staff.getDotId());
 
-        TLogistics tLogistics = new TLogistics(logisticsAddDTO.getWaybillId(), staff.getStaffId(), logisticsAddDTO.getStartDotId(), logisticsAddDTO.getTargetDotId(), logisticsAddDTO.getLogisticsType());
+        TLogistics tLogistics = new TLogistics(logisticsAddDTO.getWaybillId(), staff.getStaffId(),
+                logisticsAddDTO.getStartDotId(), logisticsAddDTO.getTargetDotId(),
+                logisticsAddDTO.getLogisticsType());
         return logisticsService.insert(tLogistics).getLogisticsId() != null;
     }
 

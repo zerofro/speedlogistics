@@ -173,4 +173,14 @@ public class TWaybillServiceImpl implements TWaybillService {
     public WaybillListVO getByCode(String waybillCode) {
         return tWaybillDao.getByCode(waybillCode);
     }
+
+    /**
+     * 校验运单号
+     * @param waybillCode
+     * @return
+     */
+    @Override
+    public Integer checkCode(String waybillCode) {
+        return tWaybillDao.checkCode(waybillCode);
+    }
 }

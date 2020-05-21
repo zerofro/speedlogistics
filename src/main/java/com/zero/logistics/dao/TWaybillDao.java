@@ -53,4 +53,11 @@ public interface TWaybillDao extends BaseDao<TWaybill> {
      * @return
      */
     public WaybillListVO getByCode(String code);
+
+    /**
+     * 校验运单号
+     * @param waybillCode
+     * @return
+     */
+    Integer checkCode(String waybillCode);
 }

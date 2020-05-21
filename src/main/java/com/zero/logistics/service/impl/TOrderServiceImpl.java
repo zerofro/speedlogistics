@@ -144,7 +144,7 @@ public class TOrderServiceImpl implements TOrderService {
     }
 
     @Override
-    public List<TOrder> list(int customerId, int state) {
+    public List<OrdersVO> list(int customerId, int state) {
         return tOrderDao.list(customerId,state);
     }
 

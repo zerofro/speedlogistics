@@ -24,7 +24,7 @@ public interface TOrderDao extends BaseDao<TOrder> {
      * 获取订单列表
      * @return
      */
-    public List<TOrder> list(@Param("customerId") int customerId, @Param("state") int state);
+    public List<OrdersVO> list(@Param("customerId") int customerId, @Param("state") int state);
 
     /**
      * 更新state

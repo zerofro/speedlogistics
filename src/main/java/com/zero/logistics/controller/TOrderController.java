@@ -91,7 +91,7 @@ public class TOrderController {
     }
 
     @GetMapping("list/o_{state}")
-    public List<TOrder> list(@PathVariable int state,HttpSession session){
+    public List<OrdersVO> list(@PathVariable int state,HttpSession session){
         return tOrderService.list(((TCustomer)session.getAttribute(Constant.CUSTOMER)).getCustomerId(), state);
     }
 
