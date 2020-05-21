@@ -67,6 +67,7 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -74,6 +75,24 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!--docker-->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <imageName>speed-logistics</imageName>
+                    <dockerDirectory>src/main/docker</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <targetPath></targetPath>
+                            <direcory>${project.build.directory}</direcory>
+                            <include>${project.build.finalName}</include>
+                        </resource>
+                    </resources>
+                </configuration>
             </plugin>
         </plugins>
     </build>
