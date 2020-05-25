@@ -6,7 +6,6 @@
         <result property="feedbackId" column="feedback_id" jdbcType="INTEGER"/>
         <result property="customerId" column="customer_id" jdbcType="INTEGER"/>
         <result property="feedbackContent" column="feedback_content" jdbcType="VARCHAR"/>
-        <result property="email" column="email" jdbcType="VARCHAR"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
@@ -15,14 +14,13 @@
         <result property="wxName" column="wx_name"/>
         <result property="realName" column="real_name"/>
         <result property="feedbackContent" column="feedback_content"/>
-        <result property="email" column="email"/>
         <result property="createTime" column="create_time"/>
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="TFeedbackMap">
         select
-          feedback_id, customer_id, feedback_content, email, create_time
+          feedback_id, customer_id, feedback_content, create_time
         from speedlogisticsdb.t_feedback
         where feedback_id = #{feedbackId}
     </select>
@@ -30,7 +28,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="TFeedbackMap">
         select
-          feedback_id, customer_id, feedback_content, email, create_time
+          feedback_id, customer_id, feedback_content,  create_time
         from speedlogisticsdb.t_feedback
         limit #{offset}, #{limit}
     </select>
@@ -38,7 +36,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TFeedbackMap">
         select
-          feedback_id, customer_id, feedback_content, email, create_time
+          feedback_id, customer_id, feedback_content,  create_time
         from speedlogisticsdb.t_feedback
         <where>
             <if test="feedbackId != null">
@@ -50,9 +48,6 @@
             <if test="feedbackContent != null and feedbackContent != ''">
                 and feedback_content = #{feedbackContent}
             </if>
-            <if test="email != null and email != ''">
-                and email = #{email}
-            </if>
             <if test="createTime != null">
                 and create_time = #{createTime}
             </if>
@@ -61,8 +56,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="feedbackId" useGeneratedKeys="true">
-        insert into speedlogisticsdb.t_feedback(customer_id, feedback_content, email, create_time)
-        values (#{customerId}, #{feedbackContent}, #{email}, #{createTime})
+        insert into speedlogisticsdb.t_feedback(customer_id, feedback_content,  create_time)
+        values (#{customerId}, #{feedbackContent}, #{createTime})
     </insert>
 
     <!--通过主键修改数据-->
@@ -74,9 +69,6 @@
             </if>
             <if test="feedbackContent != null and feedbackContent != ''">
                 feedback_content = #{feedbackContent},
-            </if>
-            <if test="email != null and email != ''">
-                email = #{email},
             </if>
             <if test="createTime != null">
                 create_time = #{createTime},

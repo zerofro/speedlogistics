@@ -24,10 +24,6 @@ public class TFeedback implements Serializable {
     */
     private String feedbackContent;
     /**
-    * 联系邮箱
-    */
-    private String email;
-    /**
     * 创建时间
     */
     private Date createTime;
@@ -55,14 +51,6 @@ public class TFeedback implements Serializable {
 
     public void setFeedbackContent(String feedbackContent) {
         this.feedbackContent = feedbackContent;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Date getCreateTime() {

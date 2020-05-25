@@ -12,4 +12,5 @@ import com.zero.logistics.vo.FeedBackVO;
  */
 public interface TFeedbackService extends BaseService<TFeedback> {
     public LayPage<FeedBackVO> getPage(int page, int limit, FeedBackVO condition);
+    boolean add(String feedbackContent, Integer customerId);
 }

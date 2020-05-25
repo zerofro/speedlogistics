@@ -8,6 +8,7 @@ import com.zero.logistics.vo.FeedBackVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -95,5 +96,14 @@ public class TFeedbackServiceImpl implements TFeedbackService {
     @Override
     public boolean batchDelete(List ids) {
         return false;
+    }
+
+    @Override
+    public boolean add(String feedbackContent, Integer customerId) {
+        TFeedback tFeedback = new TFeedback();
+        tFeedback.setCustomerId(customerId);
+        tFeedback.setFeedbackContent(feedbackContent);
+        tFeedback.setCreateTime(new Date());
+        return tFeedbackDao.insert(tFeedback) > 0;
     }
 }
