@@ -114,14 +114,16 @@ public class TPriceServiceImpl implements TPriceService {
         TAddress senderAddress = tAddressDao.queryById(order.getSenderAddressId());
         TAddress receiveAddress = tAddressDao.queryById(order.getReceiveAddressId());
         TPrice tPrice = tPriceDao.queryByProvince(senderAddress.getProvince());
+        if (tPrice == null)
+            return null;
         //地址收费
         double priceValuation = 0;
         if (senderAddress.getProvince().equals(receiveAddress.getProvince())){
-            priceValuation += tPrice.getInfirstPriority();
+            priceValuation += tPrice.getInFirstPriority();
             if (null != order.getWeight() && order.getWeight() > 1)
                 priceValuation += (order.getWeight() - 1)*tPrice.getInContinued();
         }else {
-            priceValuation += tPrice.getOutFirstPriotity();
+            priceValuation += tPrice.getOutFirstPriority();
             if (null != order.getWeight() && order.getWeight() > 1)
                 priceValuation += (order.getWeight() - 1)*tPrice.getOutContinued();
         }

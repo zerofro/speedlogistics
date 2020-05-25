@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://47.113.122.84:3306/speedlogisticsdb
+    url: jdbc:mysql://47.113.122.84:3306/speedlogisticsdb?characterEncoding=utf8
     username: root
     password: 123456
 

@@ -14,5 +14,5 @@ public interface TPriceDao extends BaseDao<TPrice> {
      * @param province 省份
      * @return 定价信息
      */
-    public TPrice queryByProvince(String province);
+    TPrice queryByProvince(String province);
 }

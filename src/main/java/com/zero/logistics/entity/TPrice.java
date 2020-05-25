@@ -6,10 +6,10 @@ import java.io.Serializable;
  * (TPrice)实体类
  *
  * @author makejava
- * @since 2020-03-31 21:17:53
+ * @since 2020-05-25 11:45:55
  */
 public class TPrice implements Serializable {
-    private static final long serialVersionUID = 577277107734945476L;
+    private static final long serialVersionUID = 347644555977550271L;
     /**
     * 地区定价编号
     */
@@ -21,11 +21,11 @@ public class TPrice implements Serializable {
     /**
     * 省内首重
     */
-    private Double infirstPriority;
+    private Double inFirstPriority;
     /**
     * 省外首重
     */
-    private Double outFirstPriotity;
+    private Double outFirstPriority;
     /**
     * 省内续重
     */
@@ -52,20 +52,20 @@ public class TPrice implements Serializable {
         this.province = province;
     }
 
-    public Double getInfirstPriority() {
-        return infirstPriority;
+    public Double getInFirstPriority() {
+        return inFirstPriority;
     }
 
-    public void setInfirstPriority(Double infirstPriority) {
-        this.infirstPriority = infirstPriority;
+    public void setInFirstPriority(Double inFirstPriority) {
+        this.inFirstPriority = inFirstPriority;
     }
 
-    public Double getOutFirstPriotity() {
-        return outFirstPriotity;
+    public Double getOutFirstPriority() {
+        return outFirstPriority;
     }
 
-    public void setOutFirstPriotity(Double outFirstPriotity) {
-        this.outFirstPriotity = outFirstPriotity;
+    public void setOutFirstPriority(Double outFirstPriority) {
+        this.outFirstPriority = outFirstPriority;
     }
 
     public Double getInContinued() {

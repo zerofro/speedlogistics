@@ -5,8 +5,8 @@
     <resultMap type="com.zero.logistics.entity.TPrice" id="TPriceMap">
         <result property="priceId" column="price_id" jdbcType="INTEGER"/>
         <result property="province" column="province" jdbcType="VARCHAR"/>
-        <result property="infirstPriority" column="infirst_priority" jdbcType="NUMERIC"/>
-        <result property="outFirstPriotity" column="out_first_priotity" jdbcType="NUMERIC"/>
+        <result property="inFirstPriority" column="in_first_priority" jdbcType="NUMERIC"/>
+        <result property="outFirstPriority" column="out_first_priority" jdbcType="NUMERIC"/>
         <result property="inContinued" column="in_continued" jdbcType="NUMERIC"/>
         <result property="outContinued" column="out_continued" jdbcType="NUMERIC"/>
     </resultMap>
@@ -14,7 +14,7 @@
     <!--查询单个-->
     <select id="queryById" resultMap="TPriceMap">
         select
-          price_id, province, infirst_priority, out_first_priotity, in_continued, out_continued
+          price_id, province, in_first_priority, out_first_priority, in_continued, out_continued
         from speedlogisticsdb.t_price
         where price_id = #{priceId}
     </select>
@@ -22,7 +22,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="TPriceMap">
         select
-          price_id, province, infirst_priority, out_first_priotity, in_continued, out_continued
+          price_id, province, in_first_priority, out_first_priority, in_continued, out_continued
         from speedlogisticsdb.t_price
         limit #{offset}, #{limit}
     </select>
@@ -30,7 +30,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TPriceMap">
         select
-          price_id, province, infirst_priority, out_first_priotity, in_continued, out_continued
+          price_id, province, in_first_priority, out_first_priority, in_continued, out_continued
         from speedlogisticsdb.t_price
         <where>
             <if test="priceId != null">
@@ -39,11 +39,11 @@
             <if test="province != null and province != ''">
                 and province = #{province}
             </if>
-            <if test="infirstPriority != null">
-                and infirst_priority = #{infirstPriority}
+            <if test="inFirstPriority != null">
+                and in_first_priority = #{inFirstPriority}
             </if>
-            <if test="outFirstPriotity != null">
-                and out_first_priotity = #{outFirstPriotity}
+            <if test="outFirstPriority != null">
+                and out_first_priority = #{outFirstPriority}
             </if>
             <if test="inContinued != null">
                 and in_continued = #{inContinued}
@@ -56,8 +56,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="priceId" useGeneratedKeys="true">
-        insert into speedlogisticsdb.t_price(province, infirst_priority, out_first_priotity, in_continued, out_continued)
-        values (#{province}, #{infirstPriority}, #{outFirstPriotity}, #{inContinued}, #{outContinued})
+        insert into speedlogisticsdb.t_price(province, in_first_priority, out_first_priority, in_continued, out_continued)
+        values (#{province}, #{inFirstPriority}, #{outFirstPriority}, #{inContinued}, #{outContinued})
     </insert>
 
     <!--通过主键修改数据-->
@@ -67,11 +67,11 @@
             <if test="province != null and province != ''">
                 province = #{province},
             </if>
-            <if test="infirstPriority != null">
-                infirst_priority = #{infirstPriority},
+            <if test="inFirstPriority != null">
+                in_first_priority = #{inFirstPriority},
             </if>
-            <if test="outFirstPriotity != null">
-                out_first_priotity = #{outFirstPriotity},
+            <if test="outFirstPriority != null">
+                out_first_priority = #{outFirstPriority},
             </if>
             <if test="inContinued != null">
                 in_continued = #{inContinued},
@@ -112,8 +112,9 @@
     </delete>
 
     <!--根据省份获取数据-->
-    <select id="queryByProvince" parameterType="string" resultMap="TPriceMap">
-        SELECT * FROM `t_price`
+    <select id="queryByProvince" resultMap="TPriceMap">
+        SELECT *
+        FROM `t_price`
         WHERE `province` = #{province}
     </select>
 </mapper>
